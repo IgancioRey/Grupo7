@@ -1,0 +1,58 @@
+<title>Cursivia - Login</title>
+{% extends "registration/base_loguin.html" %}
+
+
+{% block content %}
+
+    <div class="col-md-6 col-md-push-3 text-center">
+    
+
+      {% if form.errors %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <strong>Tu nombre de usuario y contraseña no coinciden.</strong> Por favor, intente de nuevo.
+        </div>
+      {% endif %}
+
+      {% if next %}
+          {% if user.is_authenticated %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+              <strong>Tu cuenta no tiene acceso en esta pagina.</strong> Para proceder, por favor, ingrese con una cuenta que tenga acceso.
+            </div>
+          {% else %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+              <strong>Usuario no registrado: </strong> Por favor, ingresa con una cuenta para ver esta pagina.
+            </div>
+          {% endif %}
+      {% endif %}
+
+      <h1>Ingresar</h1>
+      <div class="row tab-pane fade in active" id="iniciar-secion">
+          <form method="post" action="{% url 'login' %}" >
+            {% csrf_token %}
+              <div class="form-group">
+                <label class="sr-only" for="name">Username</label>
+                <input name="username" class="form-control" id="id_username" placeholder="Tu Nombre de Usuario" type="text">
+              </div>      
+              <div class="form-group">
+                <label class="sr-only" for="password">Password</label>
+                <input name="password" class="form-control" id="id_password" placeholder="Tu Contraseña" type="password">
+              </div>  
+              <div>
+                 <button class="btn btn-primary btn-lg btn-block" type="submit">Ingresar</button>
+                <input type="hidden" name="next" value="{{ next }}" />
+              </div>
+          </form>
+      </div>
+      <p>Todavia no sos parte de la comunidad de cursivia? <a href="{% url 'registracion' %}"><strong>Unite!</strong></a></p>
+
+       <p>Olvidaste tu contraseña? <a href="{% url 'password_reset' %}"><strong>Recuperala!</strong></a></p>
+
+
+
+  </div>
+
+{% endblock %}
+

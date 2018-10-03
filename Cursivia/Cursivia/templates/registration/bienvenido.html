@@ -1,0 +1,39 @@
+{% extends "registration/base_loguin.html" %}
+
+ 
+
+{% block content %}
+
+
+<div class="alert alert-success text-center" role="alert">
+  <strong>Bienvenido,  {{ nombre_usuario }}! </strong> Ya eres parte de la comunidad de Cursivia!
+</div>
+<div class="col-md-6 col-md-push-3 text-center">
+<h1>Ingresar</h1>
+  <div class="row tab-pane fade in active" id="iniciar-secion">
+      <form method="post" action="{% url 'login' %}" >
+        {% csrf_token %}
+          <div class="form-group">
+            <label class="sr-only" for="name">Username</label>
+            <input name="username" class="form-control" id="id_username" placeholder="Tu Nombre de Usuario" type="text">
+          </div>      
+          <div class="form-group">
+            <label class="sr-only" for="password">Password</label>
+            <input name="password" class="form-control" id="id_password" placeholder="Tu Contraseña" type="password">
+          </div>  
+          <div>
+             <button class="btn btn-primary btn-lg btn-block" type="submit">Ingresar</button>
+            <input type="hidden" name="next" value="{{ next }}" />
+          </div>
+      </form>
+  </div>
+
+   <p>Olvidaste tu contraseña? <a href="{% url 'password_reset' %}"><strong>Recuperala!</strong></a></p>
+
+  </div>
+
+  
+  
+  
+{% endblock %}
+

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+
+{% block sidebar %}
+
+<div class="sidebar-wrapper">
+
+<p> {{ lista_materias }} </p>
+<aside class="widget widget_categories">
+  <h2 class="widget-title">Carreras</h2>  
+  <ul>
+
+	{% for carrera in lista_carreras %}
+	    <li><a href="#"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> 1 </span></a></li>
+	{% endfor %}     
+  </ul>
+</aside>
+
+</div>
+
+{% endblock sidebar %}
+
+{% block content %}
+
+	Noticias
+
+{% endblock content %}
+
+
+
