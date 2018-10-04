@@ -30,7 +30,7 @@
     
     <div class="blog-content">
         <div class="entry-header">
-            <h2 class="entry-title"><a href="#">{{ noticia.titulo }}</a></h2>
+            <h2 class="entry-title"><a href="{{ noticia.get_absolute_url }}">{{ noticia.titulo }}</a></h2>
             <ul class="entry-meta clearfix">
                 <li><span class="post-author"><a href="#"><i class="fa fa-user">                
                 </i> {{ noticia.usuario.username }}</a></span></li>

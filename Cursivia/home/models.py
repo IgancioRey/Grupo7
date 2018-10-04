@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import datetime, string
 from django.http import HttpResponseRedirect
+from django.urls import reverse 
 
 # Create your models here.
 class Carrera (models.Model):
@@ -98,6 +99,7 @@ class Publicacion(models.Model):
         Devuelve el URL a una instancia particular de la publicacion
         """
         return reverse('publicacion-detail', args=[str(self.id)])
+
 
 class Comentario(models.Model):
     """
