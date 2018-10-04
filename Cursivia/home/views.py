@@ -16,7 +16,7 @@ def index(request):
     Función vista para la página inicio del sitio.
     """
     # Genera contadores de algunos de los objetos principales
-    numero_publicaciones = Publicacion.objects.all().count()
+    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n')
     numero_materias = []
     lista_materias =  []
     lista_carreras = Carrera.objects.all()
@@ -32,7 +32,7 @@ def index(request):
     return render(
         request,
         'index.html', 
-        context={'cantidad_materias': lista_materias, 'numero_materias': numero_materias,
+        context={'lista_noticias': lista_noticias, 'numero_materias': numero_materias,
                  'lista_carreras': lista_carreras},
     )
 

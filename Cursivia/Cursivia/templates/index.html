@@ -5,7 +5,6 @@
 
 <div class="sidebar-wrapper">
 
-<p> {{ lista_materias }} </p>
 <aside class="widget widget_categories">
   <h2 class="widget-title">Carreras</h2>  
   <ul>
@@ -22,7 +21,41 @@
 
 {% block content %}
 
-	Noticias
+	{% for noticia in lista_noticias %}
+
+	<article class="post-wrapper">
+    <header class="featured-wrapper">
+
+    </header><!-- /.featured-wrapper -->
+    
+    <div class="blog-content">
+        <div class="entry-header">
+            <h2 class="entry-title"><a href="#">{{ noticia.titulo }}</a></h2>
+            <ul class="entry-meta clearfix">
+                <li><span class="post-author"><a href="#"><i class="fa fa-user">                
+                </i> {{ noticia.usuario.username }}</a></span></li>
+                <li><span class="post-date"><a href="#"><i class="fa fa-calendar">
+                	
+                </i> {{ noticia.fecha_alta }}</a></span></li>
+                
+            </ul>
+        </div><!-- /.entry-header -->
+
+        <div class="entry-content">
+            <p>{{ noticia.cuerpo|truncatechars:200 }}</p>
+        </div><!-- /.entry-content -->
+    </div><!-- /.blog-content -->
+
+    <footer class="entry-footer clearfix">
+        <ul class="entry-meta pull-left">
+            <li><span class="post-comments"><a href="#"><i class="fa fa-comments"></i> 15</a></span></li>
+            <li><span class="like"><a href="#"><i class="fa fa-thumbs-o-up"></i> 320</a></span></li>
+            <li><span class="share"><a href="#"><i class="fa fa-share"></i> Share</a></span></li>
+        </ul>
+        <a class="readmore pull-right" href="#">Read More</a>
+    </footer>
+</article>
+{% endfor %} 
 
 {% endblock content %}
 
