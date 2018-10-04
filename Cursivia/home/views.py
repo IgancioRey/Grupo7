@@ -8,6 +8,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
 from .forms import *
 import random
+from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 
@@ -35,6 +37,10 @@ def index(request):
         context={'lista_noticias': lista_noticias, 'numero_materias': numero_materias,
                  'lista_carreras': lista_carreras},
     )
+
+class noticiaDetailView(generic.DetailView):
+    model = Publicacion
+    
 
 def registracion(request):
     if request.method=='POST':
