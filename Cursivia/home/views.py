@@ -38,8 +38,11 @@ def index(request):
                  'lista_carreras': lista_carreras},
     )
 
-class noticiaDetailView(generic.DetailView):
+class noticiaDetailView(LoginRequiredMixin,generic.DetailView):
     model = Publicacion
+
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
     
 
 def registracion(request):
