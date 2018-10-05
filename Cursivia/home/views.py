@@ -10,6 +10,7 @@ from .forms import *
 import random
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 
 
@@ -18,8 +19,30 @@ def index(request):
     """
     Función vista para la página inicio del sitio.
     """
+    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
+    paginator = Paginator(lista_noticias, 1) # Show 25 contacts per page
+
+    page = request.GET.get('page')
+    noticias = paginator.get_page(page)
+
+    lista_carreras = Carrera.objects.all() 
+
+    return render(request, 'index.html', {'noticias': noticias, 'lista_carreras': lista_carreras})
+    """
     # Genera contadores de algunos de los objetos principales
     lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
+    lista_aux=[]
+    noticias_final=[]
+    x=0
+    for noticia in lista_noticias:
+        if len(lista_aux)<2:
+            lista_aux.append(noticia)
+            x=x+1
+        else:
+            x=0
+            lista_aux=[]
+            noticias_final.append(lista_aux)
+    
     numero_materias = []
     lista_materias =  []
     lista_carreras = Carrera.objects.all()
@@ -35,9 +58,10 @@ def index(request):
     return render(
         request,
         'index.html', 
-        context={'lista_noticias': lista_noticias, 'numero_materias': numero_materias,
+        context={'lista_noticias': noticias_final, 'numero_materias': numero_materias,
                  'lista_carreras': lista_carreras},
     )
+    """
 
 class noticiaDetailView(LoginRequiredMixin,generic.DetailView):
     model = Publicacion
@@ -103,3 +127,6 @@ def confirmacion(request):
 
 def configuracionCuenta(request):
     return render(request, 'cuenta/configuracionCuenta.html')
+
+def logout_view(request):
+    return render(request, 'index.html')
