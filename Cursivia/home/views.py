@@ -13,12 +13,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 
+
 def index(request):
     """
     Función vista para la página inicio del sitio.
     """
     # Genera contadores de algunos de los objetos principales
-    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n')
+    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
     numero_materias = []
     lista_materias =  []
     lista_carreras = Carrera.objects.all()
@@ -40,7 +41,7 @@ def index(request):
 
 class noticiaDetailView(LoginRequiredMixin,generic.DetailView):
     model = Publicacion
-
+    #queryset = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
     login_url = '/accounts/login/'
     redirect_field_name = 'redirect_to'
     
