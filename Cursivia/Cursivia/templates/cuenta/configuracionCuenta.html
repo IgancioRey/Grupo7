@@ -1,0 +1,68 @@
+{% extends "registration/base_loguin.html" %}
+
+{% block imagen_presentacion %}
+{% endblock imagen_presentacion %}
+
+
+{% block content %}
+
+  <div class="text-center">
+      <h2 class="section-title">Menu de Usuario</h2>
+      <p><h3>A traves de este menu, podras acceder a todas las "opciones de Cuenta"  que ofrece Cursivia a sus usuarios.</h3></p>
+
+  </div>
+
+   <section>
+      <div class="container">
+          <div class="row text-center col-sm-3">
+          </div>
+          <div class="row text-center col-sm-9">
+              <a href="{% url 'index' %}"></a>
+              <div class="col-md-5 col-sm-6 sbox-gutter">
+                  <div class="service-box">
+                      <i class="flaticon-male26"></i>
+                      <h3>Perfil</h3>
+                      <p>Accede aquí para visualizar o modificar algun aspecto de tu perfil </p>
+
+                  </div><!-- /.service-box -->
+              </div><!-- /.col-sm-4 -->
+
+              <div class="col-md-5 col-sm-6 sbox-gutter">
+                  <a href="{% url 'index' %}"></a>
+                  <div class="service-box">
+                      <i class="flaticon-newspapers2"></i>
+                      <h3>Publicaciones</h3>
+                      <p>Accede aqui para visualizar, modificar o eliminar tus publicaciones</p>
+                  </div><!-- /.service-box -->
+              </div><!-- /.col-sm-4 -->
+          </div>
+
+          <div class="row text-center col-sm-3">
+          </div>
+
+          <div class="row text-center col-sm-9">
+              <div class="col-md-5 col-sm-6 sbox-gutter">
+                  <a href="{% url 'index' %}"></a>
+                  <div class="service-box">
+                      <i class="flaticon-book17"></i>
+                      <h3>Documentos almacendos</h3>
+                      <p>Accede aquí para visualizar todo el contenido importante que almacenaste</p>
+                  </div><!-- /.service-box -->
+              </div><!-- /.col-sm-4 -->
+
+              <div class="col-md-5 col-sm-6 sbox-gutter">
+                <a href="{% url 'index' %}"></a>
+                <div class="service-box">
+                    <i class="flaticon-speechbubble46"></i>
+                    <h3>Ayuda &amp; contacto</h3>
+                      <p>Accede aqui si tienes inteciones de comunicarte con nosotros</p>
+                </div><!-- /.service-box -->
+              </div><!-- /.col-sm-4 -->
+          </div><!-- /.row -->
+      </div><!-- /.container -->
+  </section>
+
+{% endblock content %}
+
+
+

@@ -99,3 +99,6 @@ def bienvenido(request, tokenActivacion):
 
 def confirmacion(request):
     return render(request, 'registration/confirmacion.html')
+
+def configuracionCuenta(request):
+    return render(request, 'cuenta/configuracionCuenta.html')

@@ -8,7 +8,9 @@ urlpatterns = [
 	url(r'^registracion/$',views.registracion, name ='registracion'),
 	url(r'^confirmacion/$', views.confirmacion, name = 'confirmacion'),
 	url(r'^bienvenido/(?P<tokenActivacion>\w+)/', views.bienvenido, name = 'bienvenido'),
-	url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail')
+	url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail'),
+	url(r'^configuracionCuenta/$', views.configuracionCuenta, name='configuracionCuenta')
+
 
 
 	# url(r'^user/new/$', views.new_user, name='new-user'),
