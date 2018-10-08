@@ -12,7 +12,7 @@
         <title>Cursivia</title>
 
         <!--  favicon -->
-        <link rel="shortcut icon" href="{% static 'static/assets/images/ico/favicon.png' %}">
+        <!-- <link rel="shortcut icon" href="{% static 'static/assets/images/ico/favicon.png' %}">
         <!--  apple-touch-icon -->
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'assets/images/ico/apple-touch-icon-144-precomposed.png' %}">
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'assets/images/ico/apple-touch-icon-114-precomposed.png' %}">
@@ -67,7 +67,7 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html"><img src="{% static 'assets/images/logo2.png' %}" alt=""></a>
+                <a class="navbar-brand" href="../"><img src="{% static 'assets/images/logo2.png' %}" alt=""></a>
               </div>
               
               {% block login %}
@@ -165,8 +165,17 @@
 
 
         <!-- blog section start -->
-        <section class="blog-section ptb-90">
+        <section class="blog-section ptb-30">
             <div class="container">
+              <div class="row">
+                  <div class="col-md-9 col-md-push-3">
+                      <div class="blog-pagination clearfix" align="right">
+                        <ul class="pagination"> 
+                         <li><a href="{% url 'nuevaNoticia' %}" type=button style="margin-top: 5px; margin-bottom: 5px;"> Nueva Noticia </a> </li>
+
+                      </div>
+                  </div>
+              </div>
                 <div class="row">
                     <div class="col-md-9 col-md-push-3">
 

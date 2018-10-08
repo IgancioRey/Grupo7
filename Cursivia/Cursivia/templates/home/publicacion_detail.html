@@ -1,1 +1,51 @@
-#ACA NACHO.
+
+{% extends "base.html" %}
+
+
+{% block sidebar %}
+
+<div class="sidebar-wrapper">
+
+<aside class="widget widget_categories">
+  <h2 class="widget-title">Carreras</h2>  
+  <ul>
+
+	{% for carrera in lista_carreras %}
+	    <li><a href="#"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> 1 </span></a></li>
+	{% endfor %}     
+  </ul>
+</aside>
+
+</div>
+
+{% endblock sidebar %}
+
+
+{% block content %}
+<article class="post-wrapper">
+    
+    <div class="blog-content">
+        <div class="entry-header">
+            <h2 class="entry-title"> {{ object.titulo }} </h2>
+            <ul class="entry-meta clearfix">
+                <li><span class="post-author"><a href="#"><i class="fa fa-user"></i> {{ object.usuario.username }}</a></span></li>
+                <li><span class="post-date"><a href="#"><i class="fa fa-calendar"></i> {{object.fecha_alta}}</a></span></li>
+                <li><span class="post-comment"><a href="#"><i class="fa fa-tags"></i> Lifestyle</a></span></li>
+            </ul>
+        </div><!-- /.entry-header -->
+
+        <div class="entry-content">
+        	{{ object.cuerpo }}
+        </div><!-- /.entry-content -->
+    </div><!-- /.blog-content -->
+</article><!-- /.post-wrapper -->
+
+<nav>
+  <ul class="pager clearfix">
+    <li><a href="#"><i class="fa fa-long-arrow-left"></i> Noticia anterior </a></li>
+    <li><a href="#">Noticia siguiente<i class="fa fa-long-arrow-right"></i></a></li>
+  </ul>
+</nav>
+
+
+{% endblock content %}

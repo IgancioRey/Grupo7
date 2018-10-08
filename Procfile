@@ -1,1 +1,1 @@
-web: cd miUni && gunicorn miUni.wsgi --log-file -
+web: cd Cursivia && gunicorn Cursivia.wsgi --log-file -

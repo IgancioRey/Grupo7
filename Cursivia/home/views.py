@@ -10,6 +10,9 @@ from .forms import *
 import random
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.views.generic.edit import FormMixin
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -17,8 +20,44 @@ def index(request):
     """
     Función vista para la página inicio del sitio.
     """
+    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
+    paginator = Paginator(lista_noticias, 5) # Show 25 contacts per page
+
+    page = request.GET.get('page')
+    noticias = paginator.get_page(page)
+
+    lista_carreras = Carrera.objects.all() 
+
+
+    n = User.objects.filter(username__exact='iganciorey')
+    """
+    nueva = Publicacion()
+    nueva.titulo = 'entro alguien!'
+    nueva.cuerpo = 'acaba de entrar alguien al sitio'
+    nueva.usuario = n[0]
+    nueva.tipo_publicacion = 'n'
+    nueva.estado_publicacion = 'p'
+    nueva.alcance = 'g'
+    nueva.save()
+    """
+
+
+    return render(request, 'index.html', {'noticias': noticias, 'lista_carreras': lista_carreras})
+    """
     # Genera contadores de algunos de los objetos principales
-    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n')
+    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
+    lista_aux=[]
+    noticias_final=[]
+    x=0
+    for noticia in lista_noticias:
+        if len(lista_aux)<2:
+            lista_aux.append(noticia)
+            x=x+1
+        else:
+            x=0
+            lista_aux=[]
+            noticias_final.append(lista_aux)
+    
     numero_materias = []
     lista_materias =  []
     lista_carreras = Carrera.objects.all()
@@ -34,16 +73,46 @@ def index(request):
     return render(
         request,
         'index.html', 
-        context={'lista_noticias': lista_noticias, 'numero_materias': numero_materias,
+        context={'lista_noticias': noticias_final, 'numero_materias': numero_materias,
                  'lista_carreras': lista_carreras},
     )
+    """
 
 class noticiaDetailView(LoginRequiredMixin,generic.DetailView):
     model = Publicacion
-
+    #queryset = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
     login_url = '/accounts/login/'
     redirect_field_name = 'redirect_to'
     
+
+
+class noticiaDetailForm(FormMixin,generic.DetailView):
+    template_name='home/publicacion_detail.html'
+    model = Publicacion
+    form_class = formNoticia
+
+
+    lista_carreras = Carrera.objects.all() 
+
+    def get_success_url(self):
+        return reverse('publicacion-detail', kwargs={'pk': self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(noticiaDetailForm, self).get_context_data(**kwargs)
+        context['form'] = formNoticia(initial={'post': self.object})
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.save()
+        return super(noticiaDetailForm, self).form_valid(form)
 
 def registracion(request):
     if request.method=='POST':
@@ -64,7 +133,7 @@ def registracion(request):
                     usuario          = Usuario(usuario = user, tokenActivacion = token)
 
                     email_subject   = 'Bienvenido a Cursivia - Activación de usuario'
-                    email_body      = " <p>Hola %s,</p> <p>Se ha registrado una cuenta con el correo %s.</p> <p> Para activarla has clic en el siguiente link: http://127.0.0.1:8000/home/bienvenido/%s </p>" % (nombre, email, token)
+                    email_body      = " Hola %s, se ha registrado una cuenta con el correo %s. Para activarla has clic en el siguiente link: http://127.0.0.1:8000/home/bienvenido/%s " % (nombre, email, token)
                     
                     send_mail(email_subject,email_body, 'cursiviaweb@gmail.com',[email] )
 
@@ -102,3 +171,27 @@ def confirmacion(request):
 
 def configuracionCuenta(request):
     return render(request, 'cuenta/configuracionCuenta.html')
+
+def logout_view(request):
+    return render(request, 'index.html')
+
+
+@login_required(login_url= '/accounts/login/')
+def nuevaNoticia(request):
+    if request.method=='POST':
+        form                = formNoticia(request.POST)
+        
+        titulo              = request.POST['titulo']
+        cuerpo              = request.POST['cuerpo']
+        usuario             = request.user
+        fecha_alta          = datetime.date.today()
+        estado_publicacion  = request.POST['estado_publicacion']
+
+        if form.is_valid():
+            formNoticia     = form.save(commit = False) 
+            formNoticia.save()
+
+        return HttpResponseRedirect("/noticiaD/", 1) 
+    else:
+        form = formRegistracion()
+    return render(request,'home/nueva_noticia.html', { 'form': form })

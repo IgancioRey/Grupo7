@@ -70,12 +70,12 @@ class Publicacion(models.Model):
         ('n', 'Noticia'),
         ('d', 'Documentacion'),
     )
-    materia = models.ForeignKey(Materia, on_delete=models.CASCADE, null=False, blank=False, default='')
+    materia = models.ForeignKey(Materia, on_delete=models.CASCADE, null=True, blank=True, default='')
     titulo = models.CharField(max_length=100)
-    cuerpo = models.CharField(max_length=5000)
+    cuerpo = models.TextField(max_length=5000)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
     fecha_alta = models.DateTimeField(default=timezone.now, null=True)
-    fecha_baja = models.DateTimeField(null=True)
+    fecha_baja = models.DateTimeField(null=True, blank=True)
     tipo_publicacion =  models.CharField(max_length=1, choices=tipoPublicacion, blank=True, default='d',
                               help_text='tipo de publicacion')
     estado_publicacion = models.CharField(max_length=1, choices=estadosCargados, blank=True, default='b',
