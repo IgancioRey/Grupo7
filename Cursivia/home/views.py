@@ -133,7 +133,7 @@ def registracion(request):
                     usuario          = Usuario(usuario = user, tokenActivacion = token)
 
                     email_subject   = 'Bienvenido a Cursivia - Activación de usuario'
-                    email_body      = " Hola %s, se ha registrado una cuenta con el correo %s. Para activarla has clic en el siguiente link: http://127.0.0.1:8000/home/bienvenido/%s " % (nombre, email, token)
+                    email_body      = " Hola %s, se ha registrado una cuenta con el correo %s. Para activarla has clic en el siguiente link: https://cursivia.herokuapp.com/home/bienvenido/%s " % (nombre, email, token)
                     
                     send_mail(email_subject,email_body, 'cursiviaweb@gmail.com',[email] )
 
