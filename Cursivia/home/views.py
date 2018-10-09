@@ -8,12 +8,14 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
 from .forms import *
 import random
-from django.views import generic
+from django.views import generic, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.decorators import login_required
-
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 
 
 def index(request):
@@ -175,7 +177,7 @@ def configuracionCuenta(request):
 def logout_view(request):
     return render(request, 'index.html')
 
-
+"""
 @login_required(login_url= '/accounts/login/')
 def nuevaNoticia(request):
     if request.method=='POST':
@@ -195,3 +197,29 @@ def nuevaNoticia(request):
     else:
         form = formRegistracion()
     return render(request,'home/nueva_noticia.html', { 'form': form })
+"""
+
+class NoticiaCreate(CreateView):
+    model = Publicacion
+    fields = ['estado_publicacion']
+    template_name= "home/publicacion_form.html"
+
+    def post(self, request, *args, **kwargs):
+        titulo = request.POST['titulo']
+        cuerpo = request.POST['cuerpo']
+        usuario = request.user
+        tipo_publicacion =  'n';
+        estado_publicacion = request.POST['estado_publicacion']
+
+        noticia = Publicacion(titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario )
+        
+        noticia.save()
+        prueba = get_object_or_404(Publicacion, pk=noticia.id)
+        return render(request, 'home/publicacion_detail.html', {'object': prueba})
+
+
+
+class NoticiaUpdate(UpdateView):
+    model = Publicacion
+    fields = ['titulo','cuerpo','estado_publicacion']
+

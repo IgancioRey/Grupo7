@@ -12,9 +12,11 @@ urlpatterns = [
 	url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail'),
 	url(r'^configuracionCuenta/$', views.configuracionCuenta, name='configuracionCuenta'),
 	url(r'^noticiaD/(?P<pk>\d+)$', views.noticiaDetailForm.as_view(), name="publicacion-detail"),
-	url(r'^nuevaNoticia/$', views.nuevaNoticia, name="nuevaNoticia")
+	url(r'^noticia/create/$', views.NoticiaCreate.as_view(), name='noticia_create'),
+    url(r'^noticia/(?P<pk>\d+)/update/$', views.NoticiaUpdate.as_view(), name='noticia_update'),
 
 
 
 	# url(r'^user/new/$', views.new_user, name='new-user'),
+	#url(r'^nuevaNoticia/$', views.nuevaNoticia, name="nuevaNoticia"),
 ] 
