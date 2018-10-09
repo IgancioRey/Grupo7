@@ -1,5 +1,4 @@
-from django.shortcuts import render, get_object_or_404
-
+from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from django.contrib.auth import authenticate, login, logout
 from .models import Publicacion, Carrera, Materia, Usuario
@@ -208,7 +207,7 @@ class NoticiaCreate(CreateView):
         titulo = request.POST['titulo']
         cuerpo = request.POST['cuerpo']
         usuario = request.user
-        tipo_publicacion =  'n';
+        tipo_publicacion =  'n'
         estado_publicacion = request.POST['estado_publicacion']
 
         noticia = Publicacion(titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario )
@@ -217,9 +216,22 @@ class NoticiaCreate(CreateView):
         prueba = get_object_or_404(Publicacion, pk=noticia.id)
         return render(request, 'home/publicacion_detail.html', {'object': prueba})
 
-
-
 class NoticiaUpdate(UpdateView):
     model = Publicacion
     fields = ['titulo','cuerpo','estado_publicacion']
+
+def NoticiaDelete(request, pk):
+
+    noticia = get_object_or_404(Publicacion, id = pk )    
+    noticia.estado_publicacion = 'e'
+    noticia.fecha_baja = timezone.now()
+    noticia.save()
+
+    print("informacion de la noticia")
+    print(noticia.id)
+    print(noticia.titulo)
+    print(noticia.estado_publicacion)
+    return redirect('/')
+
+
 

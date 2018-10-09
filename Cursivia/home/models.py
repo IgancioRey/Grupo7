@@ -99,6 +99,12 @@ class Publicacion(models.Model):
         Devuelve el URL a una instancia particular de la publicacion
         """
         return reverse('publicacion-detail', args=[str(self.id)])
+    
+    def get_aboslute_url_modificar(self): 
+        return reverse ('noticia_update', args=[str(self.id)])
+
+    def cambiar_estado_eliminado(self): 
+        return reverse ('noticia_delete', args=[str(self.id)])
 
 
 class Comentario(models.Model):

@@ -6,17 +6,17 @@
     {% csrf_token %}
 
 	<div class="form-group ">   
-			<h1>Crear una noticia</h1>
+			<h1>Edicion de noticia</h1>
 			<p></p>
 			<div> 
 				<div class="form-group">
 					<label class="sr-only" for="titulo">Titulo de la noticia</label>
-					<input name="titulo" class="form-control" id="id_titulo" placeholder="El Titulo de la Noticia" type="text">
+					<input name="titulo" class="form-control" id="id_titulo" placeholder="El Titulo de la Noticia" type="text" value={{form.titulo.value}}>
 				</div>  
 
 				<div class="form-group">
 					<label class="sr-only" for="cuerpo">Cuerpo</label>
-					<textarea name="cuerpo" class="form-control" id="id_cuerpo" placeholder="El cuerpo de la noticia" type="text" rows="7"></textarea>
+					<textarea name="cuerpo" class="form-control" id="id_cuerpo" placeholder="El cuerpo de la noticia" type="text" rows="7">{{form.cuerpo.value}}</textarea>
 				</div>
 			</div>
 		    <table>
@@ -33,7 +33,7 @@
 	{% endif %}
 	</div>
 	<div align="center">
-	  <button class="btn btn-primary" type="submit" name="action" value="registracion" style="margin-bottom: 50px;">Crear Noticia
+	  <button class="btn btn-primary" type="submit" name="action" value="registracion" style="margin-bottom: 50px;">Guardar Noticia
 	    <i class="mdi-content-send right"></i>
 	  </button> 
 	</div>

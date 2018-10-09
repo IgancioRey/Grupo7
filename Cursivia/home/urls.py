@@ -14,6 +14,7 @@ urlpatterns = [
 	url(r'^noticiaD/(?P<pk>\d+)$', views.noticiaDetailForm.as_view(), name="publicacion-detail"),
 	url(r'^noticia/create/$', views.NoticiaCreate.as_view(), name='noticia_create'),
     url(r'^noticia/(?P<pk>\d+)/update/$', views.NoticiaUpdate.as_view(), name='noticia_update'),
+    url(r'^noticia/(?P<pk>\d+)/delete/$', views.NoticiaDelete, name='noticia_delete'),
 
 
 
