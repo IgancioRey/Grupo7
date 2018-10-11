@@ -216,13 +216,14 @@ class NoticiaCreate(CreateView):
         noticia.save()
         prueba = get_object_or_404(Publicacion, pk=noticia.id)
         return render(request, 'home/publicacion_detail.html', {'object': prueba})
-
+    
     def menuCarreras(self):
         lista_carreras = Carrera.objects.all() 
         materiasC =[]
         for l in lista_carreras:
             materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
         return materiasC
+    
 
 class NoticiaUpdate(UpdateView):
     model = Publicacion
@@ -241,12 +242,11 @@ def NoticiaDelete(request, pk):
     noticia.estado_publicacion = 'e'
     noticia.fecha_baja = timezone.now()
     noticia.save()
-
-    print("informacion de la noticia")
-    print(noticia.id)
-    print(noticia.titulo)
-    print(noticia.estado_publicacion)
     return redirect('/')
+
+
+
+
 
 
 
