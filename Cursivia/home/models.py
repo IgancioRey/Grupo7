@@ -82,6 +82,9 @@ class Publicacion(models.Model):
                               help_text='situacion actual de la publicacion')
     alcance = models.CharField(max_length=1, choices=alcances, blank=True, default='g',
                               help_text='alcance de la publicacion')
+    aprovacion = models.IntegerField(null=True, blank=True, default=0)
+    denuncias = models.IntegerField(null=True, blank=True, default=0)
+
 
     def __str__(self):
         return self.titulo

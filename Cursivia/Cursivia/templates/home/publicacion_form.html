@@ -17,42 +17,65 @@
       </div>
 {% endblock sidebar %}
 
+{% endblock sidebar %}
+
+
 {% block content %}
+<article class="post-wrapper">
+    
+    <div class="blog-content">
+        <div class="entry-header">
+             {% if user.id == object.usuario.id %}
+                <div text-align="rigth">
+                    <ul class="entry-meta clearfix">
+                        <li><a href="{{ object.get_aboslute_url_modificar }}"><i class="flaticon-pencil17"></i></a></li> 
+                        <li><a data-toggle="modal" data-target="#ModalConfirmarEliminacion"><i class="flaticon-garbage2"></i></a></li>
+                    </ul>  
+                </div>  
+            {% endif %}
 
-<form action="" method="post">
-    {% csrf_token %}
+            <!-- /.modal -->
+            <div class="modal fade" id="ModalConfirmarEliminacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h5 class="modal-title" id="exampleModalLabel">Está seguro que desea eliminar la noticia?</h5>
+                  </div>
+                  <div class="modal-body">
+                    Una vez eliminada, puede recuperar su Noticia a travez de la configuracion de su cuenta
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <a role="button" class="btn btn-success" href="{{ object.cambiar_estado_eliminado }}">Eliminar Noticia</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.modal -->
 
-	<div class="form-group ">   
-			<h1>Edicion de noticia</h1>
-			<p></p>
-			<div> 
-				<div class="form-group">
-					<label class="sr-only" for="titulo">Titulo de la noticia</label>
-					<input name="titulo" class="form-control" id="id_titulo" placeholder="El Titulo de la Noticia" type="text" value={{form.titulo.value}}>
-				</div>  
+            <h2 class="entry-title"> {{ object.titulo }} </h2>
+            <ul class="entry-meta clearfix">
+                <li><span class="post-author"><a href="#"><i class="fa fa-user"></i> {{ object.usuario.username }}</a></span></li>
+                <li><span class="post-date"><a href="#"><i class="fa fa-calendar"></i> {{object.fecha_alta}}</a></span></li>
+                <li><span class="post-comment"><a href="#"><i class="fa fa-tags"></i> Lifestyle</a></span></li>
+            </ul>
+        </div><!-- /.entry-header -->
 
-				<div class="form-group">
-					<label class="sr-only" for="cuerpo">Cuerpo</label>
-					<textarea name="cuerpo" class="form-control" id="id_cuerpo" placeholder="El cuerpo de la noticia" type="text" rows="7">{{form.cuerpo.value}}</textarea>
-				</div>
-			</div>
-		    <table>
-		    	{{ form.estado_publicacion }}
-		    </table>
-	</div>  
-	<div align="center" margin-top= "5px">
-	{% if messages %}
-	    <ul class="messages">
-	      {% for message in messages %}
-	        <li class="{{ message.tags }}">{{ message }}</li>
-	      {% endfor %}
-	    </ul>
-	{% endif %}
-	</div>
-	<div align="center">
-	  <button class="btn btn-primary" type="submit" name="action" value="registracion" style="margin-bottom: 50px;">Guardar Noticia
-	    <i class="mdi-content-send right"></i>
-	  </button> 
-	</div>
-</form>
-{% endblock %}
+        <div class="entry-content">
+        	{{ object.cuerpo }}
+        </div><!-- /.entry-content -->
+    </div><!-- /.blog-content -->
+</article><!-- /.post-wrapper -->
+
+<nav>
+  <ul class="pager clearfix">
+    <li><a href="#"><i class="fa fa-long-arrow-left"></i> Noticia anterior </a></li>
+    <li><a href="#">Noticia siguiente<i class="fa fa-long-arrow-right"></i></a></li>
+  </ul>
+</nav>
+
+
+{% endblock content %}
