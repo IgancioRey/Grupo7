@@ -138,4 +138,4 @@ EMAIL_HOST_PASSWORD = 'Cursivia123'
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = 'cursiviaweb@gmail.com'
 
-#django_heroku.settings(locals())
+django_heroku.settings(locals())
