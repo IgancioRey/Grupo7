@@ -1,25 +1,21 @@
 
 {% extends "base.html" %}
 
-
 {% block sidebar %}
+      <div class="sidebar-wrapper">
 
-<div class="sidebar-wrapper">
+      <aside class="widget widget_categories">
+        <h2 class="widget-title">Carreras</h2>  
+        <ul>
 
-<aside class="widget widget_categories">
-  <h2 class="widget-title">Carreras</h2>  
-  <ul>
+        {% for carrera,materia in view.menuCarreras %}
+            <li><a href="#"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }} </span></a></li>
+        {% endfor %}     
+        </ul>
+      </aside>
 
-	{% for carrera in lista_carreras %}
-	    <li><a href="#"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> 1 </span></a></li>
-	{% endfor %}     
-  </ul>
-</aside>
-
-</div>
-
+      </div>
 {% endblock sidebar %}
-
 
 {% block content %}
 <article class="post-wrapper">

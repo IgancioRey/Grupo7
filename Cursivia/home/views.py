@@ -29,21 +29,14 @@ def index(request):
 
     lista_carreras = Carrera.objects.all() 
 
-
-    n = User.objects.filter(username__exact='iganciorey')
-    """
-    nueva = Publicacion()
-    nueva.titulo = 'entro alguien!'
-    nueva.cuerpo = 'acaba de entrar alguien al sitio'
-    nueva.usuario = n[0]
-    nueva.tipo_publicacion = 'n'
-    nueva.estado_publicacion = 'p'
-    nueva.alcance = 'g'
-    nueva.save()
-    """
+    materiasC =[]
+    for l in lista_carreras:
+        materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
 
-    return render(request, 'index.html', {'noticias': noticias, 'lista_carreras': lista_carreras})
+
+
+    return render(request, 'index.html', {'noticias': noticias, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC})
     """
     # Genera contadores de algunos de los objetos principales
     lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
@@ -102,6 +95,14 @@ class noticiaDetailForm(FormMixin,generic.DetailView):
         context = super(noticiaDetailForm, self).get_context_data(**kwargs)
         context['form'] = formNoticia(initial={'post': self.object})
         return context
+
+    def menuCarreras(self):
+        lista_carreras = Carrera.objects.all() 
+        materiasC =[]
+        for l in lista_carreras:
+            materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+        return materiasC
+
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -216,9 +217,23 @@ class NoticiaCreate(CreateView):
         prueba = get_object_or_404(Publicacion, pk=noticia.id)
         return render(request, 'home/publicacion_detail.html', {'object': prueba})
 
+    def menuCarreras(self):
+        lista_carreras = Carrera.objects.all() 
+        materiasC =[]
+        for l in lista_carreras:
+            materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+        return materiasC
+
 class NoticiaUpdate(UpdateView):
     model = Publicacion
     fields = ['titulo','cuerpo','estado_publicacion']
+
+    def menuCarreras(self):
+        lista_carreras = Carrera.objects.all() 
+        materiasC =[]
+        for l in lista_carreras:
+            materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+        return materiasC
 
 def NoticiaDelete(request, pk):
 
