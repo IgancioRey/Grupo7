@@ -9,8 +9,8 @@
   <h2 class="widget-title">Carreras</h2>  
   <ul>
 
-	{% for carrera in lista_carreras %}
-	    <li><a href="#"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> 1 </span></a></li>
+	{% for carrera,materia in lista_cantMaterias %}
+	    <li><a href="#"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }}</span></a></li>
 	{% endfor %}     
   </ul>
 </aside>
