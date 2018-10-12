@@ -21,7 +21,7 @@ def index(request):
     """
     Función vista para la página inicio del sitio.
     """
-    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
+    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n', estado_publicacion__exact='p').order_by('-fecha_alta')
     paginator = Paginator(lista_noticias, 5) # Show 25 contacts per page
 
     page = request.GET.get('page')

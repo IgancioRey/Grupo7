@@ -84,7 +84,7 @@ class Publicacion(models.Model):
                               help_text='alcance de la publicacion')
     aprovacion = models.IntegerField(null=True, blank=True, default=0)
     denuncias = models.IntegerField(null=True, blank=True, default=0)
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
+    image = models.ImageField(upload_to='images/', null=True, blank=True, default='#')
 
     def __str__(self):
         return self.titulo
