@@ -132,7 +132,7 @@ def registracion(request):
                   
                     N               = 20
                     token           = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(N))
-                    usuario          = Usuario(usuario = user, tokenActivacion = token)
+                    usuario         = Usuario(usuario = user, tokenActivacion = token)
 
                     email_subject   = 'Bienvenido a Cursivia - Activación de usuario'
                     email_body      = " Hola %s, se ha registrado una cuenta con el correo %s. Para activarla has clic en el siguiente link: https://cursivia.herokuapp.com/home/bienvenido/%s " % (nombre, email, token)
@@ -204,15 +204,21 @@ class NoticiaCreate(CreateView):
     fields = ['estado_publicacion']
     template_name= "home/publicacion_form.html"
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):        
         titulo = request.POST['titulo']
         cuerpo = request.POST['cuerpo']
         usuario = request.user
         tipo_publicacion =  'n'
         estado_publicacion = request.POST['estado_publicacion']
 
-        noticia = Publicacion(titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario )
-        
+        try:
+            image = request.FILES['image']
+            noticia = Publicacion(image = image, titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario )
+        except Exception as e:
+            noticia = Publicacion(titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario )
+            print (e)
+       
+          
         noticia.save()
         prueba = get_object_or_404(Publicacion, pk=noticia.id)
         return render(request, 'home/publicacion_detail.html', {'object': prueba})
@@ -227,7 +233,7 @@ class NoticiaCreate(CreateView):
 
 class NoticiaUpdate(UpdateView):
     model = Publicacion
-    fields = ['titulo','cuerpo','estado_publicacion']
+    fields = ['titulo','cuerpo','estado_publicacion', 'image']
 
     def menuCarreras(self):
         lista_carreras = Carrera.objects.all() 
@@ -243,10 +249,4 @@ def NoticiaDelete(request, pk):
     noticia.fecha_baja = timezone.now()
     noticia.save()
     return redirect('/')
-
-
-
-
-
-
 

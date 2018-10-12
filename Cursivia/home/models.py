@@ -84,7 +84,7 @@ class Publicacion(models.Model):
                               help_text='alcance de la publicacion')
     aprovacion = models.IntegerField(null=True, blank=True, default=0)
     denuncias = models.IntegerField(null=True, blank=True, default=0)
-
+    image = models.ImageField(upload_to='images/', null=True, blank=True)
 
     def __str__(self):
         return self.titulo
@@ -108,6 +108,9 @@ class Publicacion(models.Model):
 
     def cambiar_estado_eliminado(self): 
         return reverse ('noticia_delete', args=[str(self.id)])
+
+    def __unicode__(self,):
+        return str(self.image)
 
 
 class Comentario(models.Model):

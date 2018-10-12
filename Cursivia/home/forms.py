@@ -15,15 +15,15 @@ class formRegistracion(forms.Form):
 	apellido = forms.CharField(max_length=25, label='Apellido', widget=forms.TextInput(attrs={'class' : 'validate'}))
 	nombre = forms.CharField(max_length=25, label='Nombre', widget=forms.TextInput(attrs={'class' : 'validate'}))
 
-class formNoticia(ModelForm):
+
+class formNoticia(forms.ModelForm):
 
 	class Meta:
 		model = Publicacion
-		fields = ('titulo', 'cuerpo', 'usuario', 'fecha_alta', 'estado_publicacion') 
+		fields = ('titulo', 'cuerpo', 'usuario', 'fecha_alta', 'estado_publicacion', 'image') 
 		widgets = {
             'cuerpo': Textarea(attrs={'cols': 80, 'rows': 20}),
-        }
+        }	
 
 	#titulo = forms.CharField(max_length=100, label='Titulo', widget=forms.TextInput(attrs={'class' : 'validate'}))
 	#nombreUsuario = forms.CharField(max_length=25, label='Usuario', widget=forms.TextInput(attrs={'class' : 'validate'}))
-

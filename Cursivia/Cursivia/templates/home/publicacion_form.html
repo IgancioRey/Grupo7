@@ -19,7 +19,7 @@
 
 
 {% block content %}
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
 	<div class="form-group ">   
@@ -35,6 +35,7 @@
 					<label class="sr-only" for="cuerpo">Cuerpo</label>
 					<textarea name="cuerpo" class="form-control" id="id_cuerpo" placeholder="El cuerpo de la noticia" type="text" rows="7">{{form.cuerpo.value}}</textarea>
 				</div>
+				<p><input id="id_image" type="file" class="" name="image"></p>
 			</div>
 		    <table>
 		    	{{ form.estado_publicacion }}
@@ -55,4 +56,5 @@
 	  </button> 
 	</div>
 </form>
+
 {% endblock content %}
