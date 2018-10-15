@@ -19,6 +19,10 @@
 
 {% block content %}
   <article class="post-wrapper">
+
+    <header class="featured-wrapper">
+        <img src="{{object.image.url}}" class="img-responsive " alt="">
+    </header><!-- /.featured-wrapper -->
     
     <div class="blog-content">
         <div class="entry-header">
@@ -39,7 +43,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
-                    <h5 class="modal-title" id="exampleModalLabel">Está seguro que desea eliminar la noticia?</h5>
+                    <h3 class="modal-title" id="exampleModalLabel">Está seguro que desea eliminar la noticia?</h3>
                   </div>
                   <div class="modal-body">
                     Una vez eliminada, puede recuperar su Noticia a travez de la configuracion de su cuenta
@@ -65,6 +69,18 @@
         	{{ object.cuerpo }}
         </div><!-- /.entry-content -->
     </div><!-- /.blog-content -->
+
+    <footer class="entry-footer clearfix">
+        <ul class="entry-meta pull-left">
+            <li><span class="post-comments"><a href="#"><i class="fa fa-comments"></i> 15</a></span></li>
+            <li><span class="like"><a href="#"><i class="fa fa-thumbs-o-up"></i> 320</a></span></li>
+             <li><span class="share"><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }} & name={{object.titulo}}"><i class="fa fa-share"></i> Share </a></span></li>
+
+        </ul>
+    </footer>
+
+
+           
   </article><!-- /.post-wrapper -->
 
   <nav>

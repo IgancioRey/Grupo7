@@ -1,3 +1,5 @@
+from urllib.parse import quote_plus
+
 from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from django.contrib.auth import authenticate, login, logout
@@ -32,8 +34,6 @@ def index(request):
     materiasC =[]
     for l in lista_carreras:
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
-
-
 
 
     return render(request, 'index.html', {'noticias': noticias, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC})
@@ -71,13 +71,13 @@ def index(request):
                  'lista_carreras': lista_carreras},
     )
     """
-
+"""
 class noticiaDetailView(LoginRequiredMixin,generic.DetailView):
     model = Publicacion
     #queryset = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
     login_url = '/accounts/login/'
     redirect_field_name = 'redirect_to'
-    
+"""   
 
 
 class noticiaDetailForm(FormMixin,generic.DetailView):
@@ -102,7 +102,6 @@ class noticiaDetailForm(FormMixin,generic.DetailView):
         for l in lista_carreras:
             materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
         return materiasC
-
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -154,8 +153,6 @@ def registracion(request):
     return render(request,'registration/registracion.html', { 'form': form })
 
 
-
-
 def bienvenido(request, tokenActivacion):
     usuario  = get_object_or_404(Usuario, tokenActivacion = tokenActivacion )    
     user            = usuario.usuario
@@ -198,11 +195,9 @@ def nuevaNoticia(request):
         form = formRegistracion()
     return render(request,'home/nueva_noticia.html', { 'form': form })
 """
-
-class NoticiaCreate(CreateView):
+class NoticiaCreate(LoginRequiredMixin, CreateView):
     model = Publicacion
     fields = ['estado_publicacion']
-    template_name= "home/publicacion_form.html"
 
     def post(self, request, *args, **kwargs):        
         titulo = request.POST['titulo']
@@ -217,8 +212,7 @@ class NoticiaCreate(CreateView):
         except Exception as e:
             noticia = Publicacion(titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario )
             print (e)
-       
-          
+
         noticia.save()
         prueba = get_object_or_404(Publicacion, pk=noticia.id)
         return render(request, 'home/publicacion_detail.html', {'object': prueba})
@@ -230,8 +224,12 @@ class NoticiaCreate(CreateView):
             materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
         return materiasC
     
-
-class NoticiaUpdate(UpdateView):
+    def usuarioNoLogueado():
+        login_url = '/accounts/login/'
+        redirect_field_name = 'redirect_to'
+        
+    
+class NoticiaUpdate(LoginRequiredMixin, UpdateView):
     model = Publicacion
     fields = ['titulo','cuerpo','estado_publicacion', 'image']
 
@@ -242,8 +240,13 @@ class NoticiaUpdate(UpdateView):
             materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
         return materiasC
 
-def NoticiaDelete(request, pk):
+    def usuarioNoLogueado():
+        login_url = '/accounts/login/'
+        redirect_field_name = 'redirect_to'
 
+
+@login_required(login_url= '/accounts/login/')
+def NoticiaDelete(request, pk):
     noticia = get_object_or_404(Publicacion, id = pk )    
     noticia.estado_publicacion = 'e'
     noticia.fecha_baja = timezone.now()
