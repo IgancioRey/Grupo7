@@ -14,6 +14,13 @@ urlpatterns = [
 	url(r'^noticia/create/$', views.NoticiaCreate.as_view(), name='noticia_create'),
     url(r'^noticia/(?P<pk>\d+)/update/$', views.NoticiaUpdate.as_view(), name='noticia_update'),
     url(r'^noticia/(?P<pk>\d+)/delete/$', views.NoticiaDelete, name='noticia_delete'),
+    url(r'^foroUSCE/$', views.ForoGeneral, name ='foro_general'),
+    url(r'^foroUSCE/(?P<pk>\d+)$', views.ForoGeneralComentarios, name ='foro_general_comentarios'),
+    url(r'^noticia/comentario_noticia/$', views.ComentarioNoticia, name ='comentario_noticia'),
+
+
+
+
 
 
     #url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail'),

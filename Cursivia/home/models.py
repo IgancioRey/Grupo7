@@ -69,6 +69,7 @@ class Publicacion(models.Model):
     tipoPublicacion = (
         ('n', 'Noticia'),
         ('d', 'Documentacion'),
+        ('f', 'Foro'),
     )
     materia = models.ForeignKey(Materia, on_delete=models.CASCADE, null=True, blank=True, default='')
     titulo = models.CharField(max_length=100)
@@ -134,5 +135,4 @@ class Comentario(models.Model):
                               help_text='situacion actual del comentario')
 
     def __str__(self):
-        return self.usuario
-
+        return self.comentario

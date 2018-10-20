@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+  {% block imagen_presentacion %}
+  {% endblock %}
+
+  {% load static %} 
+  {% block sidebar %}
+    <div class="sidebar-wrapper">
+        <aside class="widget widget_categories">
+          <h2 class="widget-title">Carreras</h2>  
+            <ul>
+              {% for carrera,materia in lista_cantMaterias %}
+                  <li><a href="#"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }}</span></a></li>
+              {% endfor %}      
+            </ul>
+        </aside>
+
+    </div>
+  {% endblock sidebar %} 
+
+  {% block content %}
+  <form action=""{% url 'foro_general' %}"" method="post">
+    {% csrf_token %}
+      <h1>Foro genera de la UCSE</h1>
+      <p></p> 
+
+      <div class="form-group">
+        <label class="sr-only" for="cuerpo">Cuerpo</label>
+        <textarea name="cuerpo" class="form-control" id="id_cuerpo" placeholder="Ingrese el comentario" type="text" rows="4">{{form.cuerpo.value}}</textarea>
+      </div>
+      <div align="center">
+        <button class="btn btn-primary" type="submit" name="action" style="margin-bottom: 50px;">Crear comentario
+        <i class="mdi-content-send right"></i>
+        </button> 
+     </div>
+  </form>
+
+    {% for comentario in lista_publicaciones %}
+      <div class="author-box mt-50">
+        <div class="media">
+            <div class="media-left author-box-image">
+              <a href="#"><img class="media-object" src="{% static 'assets/images/blog/avatar.jpg ' %}" alt=""></a>
+            </div>
+
+            <div class="media-body author-box-info">
+              <h3 class="media-heading"> {{comentario.usuario}} <small>{{comentario.fecha_alta}}</small></h3>
+              <p>{{comentario.cuerpo}}</p>
+            </div> <!-- /.media-body -->
+        </div> <!-- /.media -->
+
+
+
+          <footer class="entry-footer clearfix">
+              <ul class="entry-meta pull-left">
+                  <li><span class="post-comments"><a data-toggle="collapse"  href="#collapseTwov2" aria-expanded="false"><i class="fa fa-comments" onclick="MostrarComentarios({{comentario.id}})" ></i> 15</a></span></li>
+
+
+                  <li><span class="like"><a href="#"><i class="fa fa-thumbs-o-up"></i> 320</a></span></li>
+                  
+              </ul>
+          </footer>
+
+          <div id="collapseTwov2" class="panel-collapse collapse" aria-expanded="false">
+            <div class="panel-body">
+            </div>
+          </div>
+      </div><!-- /.author-social-info -->
+    {% endfor %} 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script>
+
+      function MostrarComentarios(pk){
+        console.log(pk);  
+      }
+
+
+    </script>
+
+
+  {% endblock content %}
+
+ 
+
+
+
+
+

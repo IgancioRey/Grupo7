@@ -3,7 +3,7 @@ from urllib.parse import quote_plus
 from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from django.contrib.auth import authenticate, login, logout
-from .models import Publicacion, Carrera, Materia, Usuario
+from .models import Publicacion, Carrera, Materia, Usuario, Comentario
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 
 
 def index(request):
@@ -114,6 +115,12 @@ class noticiaDetailForm(FormMixin,generic.DetailView):
     def form_valid(self, form):
         form.save()
         return super(noticiaDetailForm, self).form_valid(form)
+
+    def get_comentarios(self):
+        noticia = get_object_or_404(Publicacion, id = self.object.id )    
+        lista_comentario = Comentario.objects.all().filter(publicacion= noticia)
+        return lista_comentario
+
 
 def registracion(request):
     if request.method=='POST':
@@ -253,3 +260,63 @@ def NoticiaDelete(request, pk):
     noticia.save()
     return redirect('/')
 
+
+def ForoGeneral(request):
+
+    if request.method=='POST':
+
+        cuerpo = request.POST['cuerpo']
+        usuario = request.user
+        fecha_alta = timezone.now()
+        estado_publicacion = 'p'
+        tipo_publicacion = 'f'
+        titulo = "Publicacion - Foro"
+        if (cuerpo == ''):
+            print("Tendriamos que tirar mensaje")        
+        else:
+            publicacion = Publicacion(titulo = titulo, tipo_publicacion = tipo_publicacion, cuerpo= cuerpo, estado_publicacion= estado_publicacion, usuario= usuario )
+            publicacion.save()
+        
+
+    lista_publicaciones = Publicacion.objects.all().filter(tipo_publicacion__exact='f', estado_publicacion__exact='p').order_by('-fecha_alta')
+    lista_carreras = Carrera.objects.all() 
+
+    materiasC =[]
+    for l in lista_carreras:
+        materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+
+
+    return render(request, 'home/foro_general.html', {'lista_publicaciones': lista_publicaciones, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC})
+ 
+def ForoGeneralComentarios (request, pk):
+    foro = get_object_or_404(Publicacion, id = pk )    
+
+    lista_comentario = Comentario.objects.all().filter(publicacion= foro)
+    print (lista_comentario) 
+
+
+@csrf_exempt
+def ComentarioNoticia(request):
+    print ("entra ajax")
+
+
+    if request.method=='POST':
+
+        noticia = get_object_or_404(Publicacion, id = request.POST['id'] )    
+        comentario = request.POST['comentario']
+        usuario = request.user
+        fecha_alta = timezone.now()
+        estado_comentario = 'p'
+        if (comentario == ''):
+            print("Tendriamos que tirar mensaje")        
+        else:
+            comentarioCreado = Comentario(publicacion= noticia, comentario= comentario, estado_comentario= estado_comentario, usuario= usuario )
+            comentarioCreado.save()
+
+    lista_carreras = Carrera.objects.all() 
+    materiasC =[]
+    for l in lista_carreras:
+        materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+
+    return render(request, 'home/publicacion_detail.html', {'object': comentarioCreado})
+ 

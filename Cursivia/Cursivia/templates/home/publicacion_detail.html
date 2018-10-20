@@ -1,7 +1,15 @@
 
 {% extends "base.html" %}
 
-{% block sidebar %}
+{% load static %}
+<head>
+  <meta property="og:url"           content= "{{ request.build_absolute_uri }}" />
+  <meta property="og:type"          content="website" />
+  <meta property="og:title"         content="Cursivia" />
+  <meta property="og:description"   content="Espacio publicitario" /> 
+</head>
+<body>
+  {% block sidebar %}
   <div class="sidebar-wrapper">
 
   <aside class="widget widget_categories">
@@ -18,6 +26,8 @@
 {% endblock sidebar %}
 
 {% block content %}
+
+
   <article class="post-wrapper">
 
     <header class="featured-wrapper">
@@ -66,7 +76,7 @@
         </div><!-- /.entry-header -->
 
         <div class="entry-content">
-        	{{ object.cuerpo }}
+          {{ object.cuerpo }}
         </div><!-- /.entry-content -->
     </div><!-- /.blog-content -->
 
@@ -74,13 +84,28 @@
         <ul class="entry-meta pull-left">
             <li><span class="post-comments"><a href="#"><i class="fa fa-comments"></i> 15</a></span></li>
             <li><span class="like"><a href="#"><i class="fa fa-thumbs-o-up"></i> 320</a></span></li>
-             <li><span class="share"><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }} & name={{object.titulo}}"><i class="fa fa-share"></i> Share </a></span></li>
-
+             <li><span class="share"><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}&title={{object.titulo}}"><i class="fa fa-share"></i> Share </a></span></li>
         </ul>
+
+<!--
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = 'https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v3.1&appId=205996212799310&autoLogAppEvents=1';
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
+        <!-- Your share button code
+        <div class="fb-share-button" 
+          data-href={{ request.build_absolute_uri }} 
+          data-layout="button_count">
+        </div>
+ -->
+
     </footer>
 
-
-           
   </article><!-- /.post-wrapper -->
 
   <nav>
@@ -90,4 +115,137 @@
     </ul>
   </nav>
 
+
+  <div id="divComentario" class="comments-wrapper mt-80">
+    <h3>Comentarios</h3>
+
+      <ul class="media-list comment-list mt-30">
+          {% for comentario in view.get_comentarios %}
+          <!-- Comment Item start-->
+            <li class="media">
+                <div class="media-left">
+                    <a href="#">
+                        <img src="{% static 'assets/images/blog/avatar.jpg ' %}" alt="image">
+                    </a>
+                </div>
+
+                <div class="media-body">
+                    <div class="comment-info">
+                        <div class="comment-author">
+                            <a href="#">{{ comentario.usuario }}</a>
+                        </div>
+                        {{ comentario.fecha_alta }}
+                        <a href="#"><i class="fa fa-comment-o"></i>Reply</a>
+                    </div>
+
+                    <p> {{ comentario.comentario }}</p>
+
+                </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <h1>Deja un comentario</h1>
+      <p></p> 
+        <div class="form-group">
+          <input name="id" class="form-control" id="id" type="hidden" value="{{object.id}}"> {{form.id}}
+
+          <label class="sr-only" for="comentario">Comentario</label>
+          <textarea name="comentario" class="form-control" id="id_comentario" placeholder="Ingrese el comentario" type="text" rows="4">{{form.comentario}}</textarea>
+        </div>
+        <div align="center">
+          <button class="btn btn-primary" type="submit" name="action" style="margin-bottom: 50px;" onclick="comentario_noticia()">Crear comentario
+          <i class="mdi-content-send right"></i>
+          </button> 
+       </div>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+<script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+<script>
+  function comentario_noticia(){
+      var comentario = $("#id_comentario").val();
+      var idNoticia = $("#id").val();
+
+      $.ajax({
+      type: 'POST',
+      url: 'comentario_noticia/',
+      data: {id: idNoticia, comentario: comentario},
+      success: function (data) {
+        $("#divComentario").load(" #divComentario");
+        $("#id_comentario").val("");
+      },
+      error: function(data) {
+      }
+    });
+  };
+
+
+
+
+$.ajaxSetup({ 
+    beforeSend: function(xhr, settings) {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+            // Only send the token to relative URLs i.e. locally.
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    } 
+});
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+
+
+
+</script>
+
 {% endblock content %}
+
+
+
+
+
