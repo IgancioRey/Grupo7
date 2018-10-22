@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^noticia/(?P<pk>\d+)/delete/$', views.NoticiaDelete, name='noticia_delete'),
     url(r'^foroUSCE/$', views.ForoGeneral, name ='foro_general'),
     url(r'^foroUSCE/(?P<pk>\d+)$', views.ForoGeneralComentarios, name ='foro_general_comentarios'),
+    url(r'^foroCarrera/(?P<pk>\d+)$', views.ForoCarreraForm.as_view(), name ='foro_carrera'),
     url(r'^noticia/comentario_noticia/$', views.ComentarioNoticia, name ='comentario_noticia'),
 
 

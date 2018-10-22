@@ -8,8 +8,18 @@ from django.urls import reverse
 # Create your models here.
 class Carrera (models.Model):
     descripcion = models.CharField(max_length=50, null=False, blank=False, default='') 
+    cant_años = models.IntegerField(null=True, blank=True, default=0)
     def __str__(self):
         return self.descripcion
+
+    def id(self):
+        """
+        Devuelve el URL a una instancia particular de la publicacion
+        """
+        return self.id
+
+    def get_absolute_url(self): 
+        return reverse('foro-carrera', args=[str(self.id)])
 
 class Materia (models.Model):
     descripcion = models.CharField(max_length=50, null=False, blank=False, default='')

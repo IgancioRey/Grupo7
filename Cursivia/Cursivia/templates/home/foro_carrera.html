@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+
+{% block sidebar %}
+  <div class="sidebar-wrapper">
+
+  <aside class="widget widget_categories">
+    <h2 class="widget-title">Carreras</h2>  
+    <ul>
+
+    {% for carrera,materia in view.menuCarreras %}
+        <li><a href="#"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }} </span></a></li>
+    {% endfor %}     
+    </ul>
+  </aside>
+
+  </div>
+{% endblock sidebar %}
+
+{% block content %}
+<h2 id="carrera"> {{ object.descripcion }} </h2>
+    
+<section class="accordion-v1-wrapper">
+    <div class="container"> 
+    <div class="row"> 
+        <div class="col-sm-9">
+        <div class="panel-group accordion-v1" id="faq-accordion">
+            {% for año,materias in view.materias %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">
+                        {% if  año  == 1 %}
+                            <a data-toggle="collapse" data-parent="#faq-accordion" href="#collapseOne">
+                        {% else %}
+                            {% if año == 2 %}
+                                <a class="collapsed" data-toggle="collapse" data-parent="#faq-accordion" href="#collapseTwo">
+                            {% else %} 
+                                {% if año == 3 %}
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#faq-accordion" href="#collapseThree">
+                                {% else %}
+                                    {% if año == 4 %}
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#faq-accordion" href="#collapseFour">
+                                    {% else %}
+                                        <a class="collapsed" data-toggle="collapse" data-parent="#faq-accordion" href="#collapseFive">
+                                    {% endif %}                                    
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                        
+                            {{ año }} Año
+                        </a>
+                      </h3>
+                    </div>
+                    {% if  año  == 1 %}
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                        {% else %}
+                            {% if año == 2 %}
+                                <div id="collapseTwo" class="panel-collapse collapse"> 
+                            {% else %} 
+                                {% if año == 3 %}
+                                    <div id="collapseThree" class="panel-collapse collapse">  
+                                {% else %}
+                                    {% if año == 4 %}
+                                    <div id="collapseFour" class="panel-collapse collapse">   
+                                    {% else %}
+                                        <div id="collapseFive" class="panel-collapse collapse">  
+                                    {% endif %}                                    
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                      <div class="panel-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Materias</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for materia in materias %}
+                                <tr>
+                                    <th scope="row"> {{ materia.descripcion }} </th>
+                                </tr>
+                            {% endfor %} 
+                            </tbody>
+                        </table>
+                    
+                      </div>
+                    </div>
+                  </div> 
+            {% endfor %} 
+
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+
+
+{% endblock content %}
+
+
+
+
+
+

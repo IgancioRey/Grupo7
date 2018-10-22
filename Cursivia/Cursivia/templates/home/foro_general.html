@@ -7,10 +7,10 @@
   {% block sidebar %}
     <div class="sidebar-wrapper">
         <aside class="widget widget_categories">
-          <h2 class="widget-title">Carreras</h2>  
+          <h2 class="widget-title">Foro Carreras</h2>  
             <ul>
               {% for carrera,materia in lista_cantMaterias %}
-                  <li><a href="#"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }}</span></a></li>
+                  <li><a href="{% url 'foro_carrera' carrera.id %}"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }}</span></a></li>
               {% endfor %}      
             </ul>
         </aside>
@@ -21,7 +21,7 @@
   {% block content %}
   <form action=""{% url 'foro_general' %}"" method="post">
     {% csrf_token %}
-      <h1>Foro genera de la UCSE</h1>
+      <h1>Foro general de la UCSE</h1>
       <p></p> 
 
       <div class="form-group">
