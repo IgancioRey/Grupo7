@@ -3,7 +3,7 @@ from urllib.parse import quote_plus
 from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from django.contrib.auth import authenticate, login, logout
-from .models import Publicacion, Carrera, Materia, Usuario, Comentario
+from .models import Publicacion, Carrera, Materia, Usuario, Comentario, Denuncia
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
@@ -118,7 +118,7 @@ class noticiaDetailForm(FormMixin,generic.DetailView):
 
     def get_comentarios(self):
         noticia = get_object_or_404(Publicacion, id = self.object.id )    
-        lista_comentario = Comentario.objects.all().filter(publicacion= noticia)
+        lista_comentario = Comentario.objects.all().filter(publicacion= noticia, estado_comentario= 'p')
         return lista_comentario
 
 
@@ -297,9 +297,7 @@ def ForoGeneralComentarios (request, pk):
 
 @csrf_exempt
 def ComentarioNoticia(request):
-    print ("entra ajax")
-
-
+   
     if request.method=='POST':
 
         noticia = get_object_or_404(Publicacion, id = request.POST['id'] )    
@@ -310,7 +308,7 @@ def ComentarioNoticia(request):
         if (comentario == ''):
             print("Tendriamos que tirar mensaje")        
         else:
-            comentarioCreado = Comentario(publicacion= noticia, comentario= comentario, estado_comentario= estado_comentario, usuario= usuario )
+            comentarioCreado = Comentario(fecha_alta=fecha_alta, publicacion= noticia, comentario= comentario, estado_comentario= estado_comentario, usuario= usuario )
             comentarioCreado.save()
 
     lista_carreras = Carrera.objects.all() 
@@ -319,4 +317,25 @@ def ComentarioNoticia(request):
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
     return render(request, 'home/publicacion_detail.html', {'object': comentarioCreado})
- 
+
+@csrf_exempt
+def DenunciarNoticia(request):
+    if request.method=='POST':
+
+        noticia = get_object_or_404(Publicacion, id = request.POST['id'] )   
+        cantidad_denuncias = Denuncia.objects.all().filter(publicacion= noticia).count()
+        print (cantidad_denuncias)
+        if  (cantidad_denuncias >= 3):
+            noticia.estado_publicacion = 'd'
+            noticia.save() 
+        comentario = request.POST['comentario']
+        usuario = request.user
+        fecha_alta = timezone.now()
+        if (comentario == ''):
+            print("Tendriamos que tirar mensaje")        
+        else:
+            denuncia = Denuncia(publicacion= noticia, comentario= comentario, usuario= usuario, fecha_alta= fecha_alta)
+            denuncia.save()
+
+    return render(request, 'home/publicacion_detail.html', {'object': noticia})
+     
