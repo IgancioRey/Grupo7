@@ -142,7 +142,6 @@
     </ul>
   </nav>
 
-
   <div id="divComentario" class="comments-wrapper mt-80">
     <h3>Comentarios</h3>
 
@@ -155,11 +154,16 @@
                         <img src="{% static 'assets/images/blog/avatar.jpg ' %}" alt="image">
                     </a>
                 </div>
-
+            
                 <div class="media-body">
                     <div class="comment-info">
                         <div class="comment-author">
                             <a href="#">{{ comentario.usuario }}</a>
+                            {% if user.id == comentario.usuario.id %}
+                              <button id="button_eliminar" type="button" class="close" value="{{comentario.id}}" onclick="eliminar_comentario(this)">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            {% endif %}
                         </div>
                         {{ comentario.fecha_alta }}
                         <a href="#"><i class="fa fa-comment-o"></i>Reply</a>
@@ -209,7 +213,6 @@
   };
 
 function denuncia_noticia(){
-      console.log("entro")
       var comentario = $("#id_comentarioDenuncia").val();
       var idNoticia = $("#idPublicacion").val();
 
@@ -226,6 +229,24 @@ function denuncia_noticia(){
       }
     });
   };
+
+function eliminar_comentario(boton){
+      var idComentario = boton.value;
+      console.log("entro", boton.value)
+
+      $.ajax({
+      type: 'POST',
+      url: 'comentario_noticia/delete',
+      data: {id: idComentario},
+      success: function (data) {
+        $("#divComentario").load(" #divComentario");
+
+      },
+      error: function(data) {
+      }
+    });
+  };
+
 
 
 

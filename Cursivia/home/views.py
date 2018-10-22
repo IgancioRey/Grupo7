@@ -338,4 +338,20 @@ def DenunciarNoticia(request):
             denuncia.save()
 
     return render(request, 'home/publicacion_detail.html', {'object': noticia})
+   
+
+
+@csrf_exempt
+def EliminarComentarioNoticia(request):
+    if request.method=='POST':
+
+        comentario = get_object_or_404(Comentario, id = request.POST['id'] )   
+        comentario.fecha_baja = timezone.now()
+        comentario.motivo_baja = "Usuario elimino su comentario"
+        comentario.estado_comentario = 'e'
+
+        print (comentario)
+        comentario.save()
+
+    return render(request, 'home/publicacion_detail.html')
      
