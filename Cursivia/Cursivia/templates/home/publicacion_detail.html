@@ -13,11 +13,11 @@
   <div class="sidebar-wrapper">
 
   <aside class="widget widget_categories">
-    <h2 class="widget-title"> Foro Carreras</h2>  
+    <h2 class="widget-title">Carreras</h2>  
     <ul>
 
     {% for carrera,materia in view.menuCarreras %}
-        <li><a href= "{% url 'foro_carrera' carrera.id %}"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }} </span></a></li>
+        <li><a href= "#"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }} </span></a></li>
     {% endfor %}     
     </ul>
   </aside>
@@ -84,7 +84,8 @@
         <ul class="entry-meta pull-left">
             <li><span class="post-comments"><a href="#"><i class="fa fa-comments"></i> 15</a></span></li>
             <li><span class="like"><a href="#"><i class="fa fa-thumbs-o-up"></i> 320</a></span></li>
-             <li><span class="share"><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}&title={{object.titulo}}"><i class="fa fa-share"></i> Share </a></span></li>
+            <li><span class="share"><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}&title={{object.titulo}}"><i class="fa fa-share"></i> Share </a></span></li>
+            <li><span class="post-comments"><a data-toggle="modal" data-target="#ModalConfirmarDenuncia"><i class="fa fa-delete"></i> Denunciar</a></span></li>
         </ul>
 
 <!--
@@ -106,6 +107,32 @@
 
     </footer>
 
+
+   <!-- /.modal -->
+   
+      <div class="modal fade" id="ModalConfirmarDenuncia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="modal-title" id="exampleModalLabel">Está seguro que desea denunciar la noticia?</h3>
+            </div>
+            <div class="modal-body">
+                <input name="idPublicacion" class="form-control" id="idPublicacion" type="hidden" value="{{object.id}}">
+                <textarea name="comentarioDenuncia" class="form-control" id="id_comentarioDenuncia" placeholder="Ingrese el motivo por el cual esta denunciando esta noticia" type="text" rows="4"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+              <button type="submit" name="action" class="btn btn-success" data-dismiss="modal" onclick="denuncia_noticia()">Denunciar Noticia</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- /.modal -->
+
+
   </article><!-- /.post-wrapper -->
 
   <nav>
@@ -114,7 +141,6 @@
       <li><a href="#">Noticia siguiente<i class="fa fa-long-arrow-right"></i></a></li>
     </ul>
   </nav>
-
 
   <div id="divComentario" class="comments-wrapper mt-80">
     <h3>Comentarios</h3>
@@ -128,11 +154,16 @@
                         <img src="{% static 'assets/images/blog/avatar.jpg ' %}" alt="image">
                     </a>
                 </div>
-
+            
                 <div class="media-body">
                     <div class="comment-info">
                         <div class="comment-author">
                             <a href="#">{{ comentario.usuario }}</a>
+                            {% if user.id == comentario.usuario.id %}
+                              <button id="button_eliminar" type="button" class="close" value="{{comentario.id}}" onclick="eliminar_comentario(this)">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            {% endif %}
                         </div>
                         {{ comentario.fecha_alta }}
                         <a href="#"><i class="fa fa-comment-o"></i>Reply</a>
@@ -175,6 +206,41 @@
       success: function (data) {
         $("#divComentario").load(" #divComentario");
         $("#id_comentario").val("");
+      },
+      error: function(data) {
+      }
+    });
+  };
+
+function denuncia_noticia(){
+      var comentario = $("#id_comentarioDenuncia").val();
+      var idNoticia = $("#idPublicacion").val();
+
+      $.ajax({
+      type: 'POST',
+      url: 'denunciar/',
+      data: {id: idNoticia, comentario: comentario},
+      success: function (data) {
+        $("#divComentario").load(" #divComentario");
+        $("#id_comentarioDenuncia").val("");
+
+      },
+      error: function(data) {
+      }
+    });
+  };
+
+function eliminar_comentario(boton){
+      var idComentario = boton.value;
+      console.log("entro", boton.value)
+
+      $.ajax({
+      type: 'POST',
+      url: 'comentario_noticia/delete',
+      data: {id: idComentario},
+      success: function (data) {
+        $("#divComentario").load(" #divComentario");
+
       },
       error: function(data) {
       }
