@@ -25,13 +25,21 @@ def index(request):
     Función vista para la página inicio del sitio.
     """
     lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n', estado_publicacion__exact='p').order_by('-fecha_alta')
-    paginator = Paginator(lista_noticias, 5) # Show 25 contacts per page
+    
+    #CREE NUEVA LISTA
+    lista_noticias_completa =[]
+    for l in lista_noticias: 
+        lista_noticias_completa.append([l,Comentario.objects.all().filter(publicacion__exact=l, estado_comentario__exact='p').count()])
+    #HASTA ACA
 
+    #LA ASIGNE AL PAGINADO
+    paginator = Paginator(lista_noticias_completa, 5) # Show 25 contacts per page
+    #HASTA ACA
+    
     page = request.GET.get('page')
     noticias = paginator.get_page(page)
 
     lista_carreras = Carrera.objects.all() 
-
     materiasC =[]
     for l in lista_carreras: 
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])

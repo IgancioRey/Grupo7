@@ -22,7 +22,7 @@
     
     
 
-	{% for noticia in noticias %}
+	{% for noticia,cantidadComentario in noticias %}
 
 	<article class="post-wrapper">
     <header class="featured-wrapper">
@@ -49,9 +49,8 @@
 
     <footer class="entry-footer clearfix">
         <ul class="entry-meta pull-left">
-            <li><span class="post-comments"><a href="#"><i class="fa fa-comments"></i> 15</a></span></li>
-            <li><span class="like"><a href="#"><i class="fa fa-thumbs-o-up"></i> 320</a></span></li>
-            <li><span class="share"><a href="#"><i class="fa fa-share"></i> Share</a></span></li>
+            <li style="color: #ff2a40;"><span class="post-comments"><strong><i class="fa fa-comments"></i> {{ cantidadComentario }}</strong></span></li>
+            <li style="color: #ff2a40;"><span class="like"><strong><i class="fa fa-thumbs-o-up"></i> {{noticia.aprovacion}}</strong></span></li>
         </ul>
         <a class="readmore pull-right" href="{{ noticia.get_absolute_url }}">Read More</a>
     </footer>

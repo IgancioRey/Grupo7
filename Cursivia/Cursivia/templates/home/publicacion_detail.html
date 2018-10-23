@@ -82,7 +82,7 @@
 
     <footer class="entry-footer clearfix">
       <div id="divIdBrra">
-        <ul class="entry-meta pull-left">
+        <ul class="entry-meta pull-right">
             {% if user.id in view.get_megusta %}
               <li><a onclick="agregar_megusta()"><span class="like"><i class="fa fa-thumbs-o-up"></i> Ya no me Gusta</span></a></li>  
             {% else %}
@@ -90,8 +90,10 @@
             {% endif %}
             <li><span class="share"><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}&title={{object.titulo}}"><i class="fa fa-share"></i> Share </a></span></li>
             <li><span class="post-comments"><a data-toggle="modal" data-target="#ModalConfirmarDenuncia"><i class="fa fa-delete"></i> Denunciar</a></span></li>
-            <li style="color: #ff2a40; align: right;"><span class="post-comments"><strong><i class="fa fa-comments"></i> {{view.get_comentarios.count}}</strong></span></li>
-            <li style="color: #ff2a40; text-align: right;"><span class="like"><strong><i class="fa fa-thumbs-o-up"></i> {{object.aprovacion}}</strong></span></li>
+        </ul>
+        <ul class="entry-meta pull-left">
+          <li style="color: #ff2a40;"><span class="post-comments"><strong><i class="fa fa-comments"></i> {{view.get_comentarios.count}}</strong></span></li>
+            <li style="color: #ff2a40;"><span class="like"><strong><i class="fa fa-thumbs-o-up"></i> {{object.aprovacion}}</strong></span></li>
         </ul>
       </div>
 
@@ -269,11 +271,6 @@ function agregar_megusta(){
       }
     });
   };
-
-
-
-
-
 
 $.ajaxSetup({ 
     beforeSend: function(xhr, settings) {
