@@ -35,7 +35,7 @@ def index(request):
     #LA ASIGNE AL PAGINADO
     paginator = Paginator(lista_noticias_completa, 5) # Show 25 contacts per page
     #HASTA ACA
-    
+
     page = request.GET.get('page')
     noticias = paginator.get_page(page)
 
@@ -132,15 +132,10 @@ class noticiaDetailForm(FormMixin,generic.DetailView):
     def get_megusta(self):
         noticia = get_object_or_404(Publicacion, id =   self.object.id )  
         lista_meGusta = MeGusta.objects.all().filter(publicacion= noticia)
-
-        print("LISTA COMPLETA -- >", lista_meGusta)        
         
         lista_meGusta_usuario =[]
-
         for l in lista_meGusta:
             lista_meGusta_usuario.append(l.usuario.id)
-
-        print("LISTA USUARIO -- >", lista_meGusta_usuario)
 
         return lista_meGusta_usuario
 
