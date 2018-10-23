@@ -78,7 +78,7 @@
                             <tbody>
                             {% for materia in materias %}
                                 <tr>
-                                    <th scope="row"> {{ materia.descripcion }} </th>
+                                    <th scope="row"> <a href="{{ materia.get_absolute_url }}">{{ materia.descripcion }} </a> </th>            
                                 </tr>
                             {% endfor %} 
                             </tbody>

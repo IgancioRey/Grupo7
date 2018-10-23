@@ -311,7 +311,7 @@ class ForoCarreraForm(FormMixin,generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ForoCarreraForm, self).get_context_data(**kwargs)
-        context['form'] = formNoticia(initial={'post': self.object})
+        context['form'] = formCarrera(initial={'post': self.object})
         return context
 
     def menuCarreras(self):
@@ -327,29 +327,39 @@ class ForoCarreraForm(FormMixin,generic.DetailView):
         materiasA =[]
         for l in range(1,carrera.cant_años+1):
             materiasA.append([l,Materia.objects.all().filter(carrera=carrera, año=l)])
-        print (materiasA)
         return materiasA
 
 
-    """
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-    
-    def form_valid(self, form):
-        form.save()
-        return super(noticiaDetailForm, self).form_valid(form)
+class ForoMateriaForm(FormMixin,generic.DetailView):
+    template_name='home/foro_materia.html'
+    model = Materia
+    form_class = formMateria
 
+    def get_success_url(self):
+        return reverse('foro_materia', kwargs={'pk': self.object.id})
 
-    def get_comentarios(self):
-        noticia = get_object_or_404(Publicacion, id = self.object.id )    
-        lista_comentario = Comentario.objects.all().filter(publicacion= noticia)
-        return lista_comentario  
-    """  
+    def get_context_data(self, **kwargs):
+        context = super(ForoMateriaForm, self).get_context_data(**kwargs)
+        context['form'] = formMateria(initial={'post': self.object})
+        return context
+
+    def menuCarreras(self):
+        lista_carreras = Carrera.objects.all() 
+        materiasC =[]
+        for l in lista_carreras:
+            materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+        return materiasC
+
+    def publicaciones(self): 
+        materia = get_object_or_404(Materia, id = self.object.id )
+
+        lista_publicaciones = Publicacion.objects.all().filter(tipo_publicacion__exact='f', estado_publicacion__exact='p', materia=materia).order_by('-fecha_alta')
+        paginator = Paginator(lista_publicaciones, 5) # Show 25 contacts per page
+
+        page = self.request.GET.get('page')
+        publicaciones = paginator.get_page(page)
+
+        return publicaciones
 
 
 def ForoGeneralComentarios (request, pk):

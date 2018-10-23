@@ -33,3 +33,9 @@ class formCarrera(forms.ModelForm):
 	class Meta:
 		model = Carrera
 		fields = ('descripcion', 'cant_años') 
+
+class formMateria(forms.ModelForm):
+
+	class Meta:
+		model = Materia
+		fields = ('descripcion', 'carrera', 'año') 

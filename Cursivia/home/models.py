@@ -12,10 +12,7 @@ class Carrera (models.Model):
     def __str__(self):
         return self.descripcion
 
-    def id(self):
-        """
-        Devuelve el URL a una instancia particular de la publicacion
-        """
+    def id(self): 
         return self.id
 
     def get_absolute_url(self): 
@@ -25,6 +22,10 @@ class Materia (models.Model):
     descripcion = models.CharField(max_length=50, null=False, blank=False, default='')
     carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE, null=False, blank=False,default='')
     año = models.IntegerField(default=0)
+
+    def get_absolute_url(self): 
+        return reverse('foro_materia', args=[str(self.id)])
+
     def __str__(self):
         return self.descripcion  
 
