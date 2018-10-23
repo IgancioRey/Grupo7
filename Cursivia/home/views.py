@@ -3,7 +3,7 @@ from urllib.parse import quote_plus
 from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from django.contrib.auth import authenticate, login, logout
-from .models import Publicacion, Carrera, Materia, Usuario, Comentario, Denuncia
+from .models import Publicacion, Carrera, Materia, Usuario, Comentario, Denuncia, MeGusta
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
@@ -25,13 +25,21 @@ def index(request):
     Función vista para la página inicio del sitio.
     """
     lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n', estado_publicacion__exact='p').order_by('-fecha_alta')
-    paginator = Paginator(lista_noticias, 5) # Show 25 contacts per page
+    
+    #CREE NUEVA LISTA
+    lista_noticias_completa =[]
+    for l in lista_noticias: 
+        lista_noticias_completa.append([l,Comentario.objects.all().filter(publicacion__exact=l, estado_comentario__exact='p').count()])
+    #HASTA ACA
+
+    #LA ASIGNE AL PAGINADO
+    paginator = Paginator(lista_noticias_completa, 5) # Show 25 contacts per page
+    #HASTA ACA
 
     page = request.GET.get('page')
     noticias = paginator.get_page(page)
 
     lista_carreras = Carrera.objects.all() 
-
     materiasC =[]
     for l in lista_carreras: 
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
@@ -120,6 +128,16 @@ class noticiaDetailForm(FormMixin,generic.DetailView):
         noticia = get_object_or_404(Publicacion, id = self.object.id )    
         lista_comentario = Comentario.objects.all().filter(publicacion= noticia, estado_comentario= 'p')
         return lista_comentario
+    
+    def get_megusta(self):
+        noticia = get_object_or_404(Publicacion, id =   self.object.id )  
+        lista_meGusta = MeGusta.objects.all().filter(publicacion= noticia)
+        
+        lista_meGusta_usuario =[]
+        for l in lista_meGusta:
+            lista_meGusta_usuario.append(l.usuario.id)
+
+        return lista_meGusta_usuario
 
 
 def registracion(request):
@@ -428,4 +446,34 @@ def EliminarComentarioNoticia(request):
         comentario.save()
 
     return render(request, 'home/publicacion_detail.html')
-     
+
+
+@csrf_exempt
+def MeGustaNoticia(request):
+    if request.method=='POST':
+        noticia = get_object_or_404(Publicacion, id = request.POST['id'] )  
+       
+        usuario = request.user
+        fecha_alta = timezone.now()
+
+        try:
+            meGusta = MeGusta.objects.get(publicacion= noticia, usuario= usuario)
+        except MeGusta.DoesNotExist:
+            meGusta = None
+
+        if (meGusta == None):
+            megusta = MeGusta(publicacion= noticia, usuario= usuario, fecha_alta= fecha_alta)
+            megusta.save()
+            noticia.aprovacion =  noticia.aprovacion + 1
+
+        else:
+            meGustaEliminado = MeGusta.objects.get(publicacion= noticia, usuario= usuario)
+            meGustaEliminado.delete()
+
+            noticia.aprovacion =  noticia.aprovacion - 1
+
+
+        noticia.save()
+        
+        
+    return render(request, 'home/publicacion_detail.html')     
