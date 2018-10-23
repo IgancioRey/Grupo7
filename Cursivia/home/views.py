@@ -33,7 +33,7 @@ def index(request):
     lista_carreras = Carrera.objects.all() 
 
     materiasC =[]
-    for l in lista_carreras:
+    for l in lista_carreras: 
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
 
@@ -302,7 +302,81 @@ def ForoGeneral(request):
 
 
     return render(request, 'home/foro_general.html', {'lista_publicaciones': lista_publicaciones, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC})
- 
+"""
+def ForoCarrera(request, pk):
+
+    carrera = get_object_or_404(Carrera, id = pk ) 
+    materias = Materia.objects.all().filter(carrera =carrera).order_by('año')
+
+    materiasA =[]
+    for l in range(1,carrera.cant_años+1):
+        materiasA.append([l,Materia.objects.all().filter(carrera=l, año=l)])
+
+
+    return render(request, 'home/foro_carrera.html', {'lista_materias': materiasA})
+"""
+
+class ForoCarreraForm(FormMixin,generic.DetailView):
+    template_name='home/foro_carrera.html'
+    model = Carrera
+    form_class = formCarrera
+
+    def get_success_url(self):
+        return reverse('foro_carrera', kwargs={'pk': self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(ForoCarreraForm, self).get_context_data(**kwargs)
+        context['form'] = formCarrera(initial={'post': self.object})
+        return context
+
+    def menuCarreras(self):
+        lista_carreras = Carrera.objects.all() 
+        materiasC =[]
+        for l in lista_carreras:
+            materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+        return materiasC
+
+
+    def materias(self): 
+        carrera = get_object_or_404(Carrera, id = self.object.id )  
+        materiasA =[]
+        for l in range(1,carrera.cant_años+1):
+            materiasA.append([l,Materia.objects.all().filter(carrera=carrera, año=l)])
+        return materiasA
+
+
+class ForoMateriaForm(FormMixin,generic.DetailView):
+    template_name='home/foro_materia.html'
+    model = Materia
+    form_class = formMateria
+
+    def get_success_url(self):
+        return reverse('foro_materia', kwargs={'pk': self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(ForoMateriaForm, self).get_context_data(**kwargs)
+        context['form'] = formMateria(initial={'post': self.object})
+        return context
+
+    def menuCarreras(self):
+        lista_carreras = Carrera.objects.all() 
+        materiasC =[]
+        for l in lista_carreras:
+            materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+        return materiasC
+
+    def publicaciones(self): 
+        materia = get_object_or_404(Materia, id = self.object.id )
+
+        lista_publicaciones = Publicacion.objects.all().filter(tipo_publicacion__exact='f', estado_publicacion__exact='p', materia=materia).order_by('-fecha_alta')
+        paginator = Paginator(lista_publicaciones, 5) # Show 25 contacts per page
+
+        page = self.request.GET.get('page')
+        publicaciones = paginator.get_page(page)
+
+        return publicaciones
+
+
 def ForoGeneralComentarios (request, pk):
     foro = get_object_or_404(Publicacion, id = pk )    
 

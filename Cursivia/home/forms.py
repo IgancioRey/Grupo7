@@ -27,3 +27,15 @@ class formNoticia(forms.ModelForm):
 
 	#titulo = forms.CharField(max_length=100, label='Titulo', widget=forms.TextInput(attrs={'class' : 'validate'}))
 	#nombreUsuario = forms.CharField(max_length=25, label='Usuario', widget=forms.TextInput(attrs={'class' : 'validate'}))
+
+class formCarrera(forms.ModelForm):
+
+	class Meta:
+		model = Carrera
+		fields = ('descripcion', 'cant_años') 
+
+class formMateria(forms.ModelForm):
+
+	class Meta:
+		model = Materia
+		fields = ('descripcion', 'carrera', 'año') 
