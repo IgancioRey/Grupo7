@@ -81,12 +81,19 @@
     </div><!-- /.blog-content -->
 
     <footer class="entry-footer clearfix">
+      <div id="divIdBrra">
         <ul class="entry-meta pull-left">
-            <li><span class="post-comments"><a href="#"><i class="fa fa-comments"></i> 15</a></span></li>
-            <li><span class="like"><a href="#"><i class="fa fa-thumbs-o-up"></i> 320</a></span></li>
+            {% if user.id in view.get_megusta %}
+              <li><a onclick="agregar_megusta()"><span class="like"><i class="fa fa-thumbs-o-up"></i> Ya no me Gusta</span></a></li>  
+            {% else %}
+              <li><a onclick="agregar_megusta()"><span class="like"><i class="fa fa-thumbs-o-up"></i> Me Gusta</span></a></li> 
+            {% endif %}
             <li><span class="share"><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}&title={{object.titulo}}"><i class="fa fa-share"></i> Share </a></span></li>
             <li><span class="post-comments"><a data-toggle="modal" data-target="#ModalConfirmarDenuncia"><i class="fa fa-delete"></i> Denunciar</a></span></li>
+            <li style="color: #ff2a40; align: right;"><span class="post-comments"><strong><i class="fa fa-comments"></i> {{view.get_comentarios.count}}</strong></span></li>
+            <li style="color: #ff2a40; text-align: right;"><span class="like"><strong><i class="fa fa-thumbs-o-up"></i> {{object.aprovacion}}</strong></span></li>
         </ul>
+      </div>
 
 <!--
         <div id="fb-root"></div>
@@ -206,6 +213,7 @@
       success: function (data) {
         $("#divComentario").load(" #divComentario");
         $("#id_comentario").val("");
+        $("#divIdBrra").load(" #divIdBrra");
       },
       error: function(data) {
       }
@@ -232,7 +240,6 @@ function denuncia_noticia(){
 
 function eliminar_comentario(boton){
       var idComentario = boton.value;
-      console.log("entro", boton.value)
 
       $.ajax({
       type: 'POST',
@@ -240,12 +247,30 @@ function eliminar_comentario(boton){
       data: {id: idComentario},
       success: function (data) {
         $("#divComentario").load(" #divComentario");
-
+        $("#divIdBrra").load(" #divIdBrra");
       },
       error: function(data) {
       }
     });
   };
+
+function agregar_megusta(){
+      var idNoticia = $("#idPublicacion").val();
+
+      $.ajax({
+      type: 'POST',
+      url: 'me_gusta/',
+      data: {id: idNoticia},
+      success: function (data) {
+        $("#divComentario").load(" #divComentario");
+        $("#divIdBrra").load(" #divIdBrra");
+      },
+      error: function(data) {
+      }
+    });
+  };
+
+
 
 
 

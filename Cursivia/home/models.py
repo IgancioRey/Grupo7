@@ -151,3 +151,16 @@ class Denuncia(models.Model):
    
     def __str__(self):
         return self.comentario
+
+class MeGusta(models.Model):
+    """
+    Modelo que representa una publicacion, tanto noticia como documento.
+    """
+
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
+    fecha_alta = models.DateTimeField(default=timezone.now, null=True)
+   
+    def __str__(self):
+        return self.usuario.username
+
