@@ -53,14 +53,14 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
-                    <h3 class="modal-title" id="exampleModalLabel">Está seguro que desea eliminar la noticia?</h3>
+                    <h3 class="modal-title" id="exampleModalLabel">Está seguro que desea eliminar la publicación?</h3>
                   </div>
                   <div class="modal-body">
-                    Una vez eliminada, puede recuperar su Noticia a travez de la configuracion de su cuenta
+                    Una vez eliminada, puede recuperar su Publicacion a travez de la configuracion de su cuenta
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                    <a role="button" class="btn btn-success" href="{{ object.cambiar_estado_eliminado }}">Eliminar Noticia</a>
+                    <a role="button" class="btn btn-success" href="{{ object.cambiar_estado_eliminado }}">Eliminar Publicacion</a>
                   </div>
                 </div>
               </div>
@@ -125,15 +125,15 @@
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-              <h3 class="modal-title" id="exampleModalLabel">Está seguro que desea denunciar la noticia?</h3>
+              <h3 class="modal-title" id="exampleModalLabel">Está seguro que desea denunciar la publicacion?</h3>
             </div>
             <div class="modal-body">
                 <input name="idPublicacion" class="form-control" id="idPublicacion" type="hidden" value="{{object.id}}">
-                <textarea name="comentarioDenuncia" class="form-control" id="id_comentarioDenuncia" placeholder="Ingrese el motivo por el cual esta denunciando esta noticia" type="text" rows="4"></textarea>
+                <textarea name="comentarioDenuncia" class="form-control" id="id_comentarioDenuncia" placeholder="Ingrese el motivo por el cual esta denunciando esta publicacion" type="text" rows="4"></textarea>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-              <button type="submit" name="action" class="btn btn-success" data-dismiss="modal" onclick="denuncia_noticia()">Denunciar Noticia</a>
+              <button type="submit" name="action" class="btn btn-success" data-dismiss="modal" onclick="denuncia_publicacion()">Denunciar Publicacion</a>
             </div>
           </div>
         </div>
@@ -187,7 +187,7 @@
           <textarea name="comentario" class="form-control" id="id_comentario" placeholder="Ingrese el comentario" type="text" rows="4">{{form.comentario}}</textarea>
         </div>
         <div align="center">
-          <button class="btn btn-primary" type="submit" name="action" style="margin-bottom: 50px;" onclick="comentario_noticia()">Crear comentario
+          <button class="btn btn-primary" type="submit" name="action" style="margin-bottom: 50px;" onclick="comentario_publicacion()">Crear comentario
           <i class="mdi-content-send right"></i>
           </button> 
        </div>
@@ -196,14 +196,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
 <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
 <script>
-  function comentario_noticia(){
+  function comentario_publicacion(){
       var comentario = $("#id_comentario").val();
-      var idNoticia = $("#id").val();
+      var idPublicacion = $("#id").val();
 
       $.ajax({
       type: 'POST',
-      url: 'comentario_noticia/',
-      data: {id: idNoticia, comentario: comentario},
+      url: 'comentario_publicacion/',
+      data: {id: idPublicacion, comentario: comentario},
       success: function (data) {
         $("#divComentario").load(" #divComentario");
         $("#id_comentario").val("");
@@ -214,14 +214,14 @@
     });
   };
 
-function denuncia_noticia(){
+function denuncia_publicacion(){
       var comentario = $("#id_comentarioDenuncia").val();
-      var idNoticia = $("#idPublicacion").val();
+      var idPublicacion = $("#idPublicacion").val();
 
       $.ajax({
       type: 'POST',
       url: 'denunciar/',
-      data: {id: idNoticia, comentario: comentario},
+      data: {id: idPublicacion, comentario: comentario},
       success: function (data) {
         $("#divComentario").load(" #divComentario");
         $("#id_comentarioDenuncia").val("");
@@ -237,7 +237,7 @@ function eliminar_comentario(boton){
 
       $.ajax({
       type: 'POST',
-      url: 'comentario_noticia/delete',
+      url: 'comentario_publicacion/delete',
       data: {id: idComentario},
       success: function (data) {
         $("#divComentario").load(" #divComentario");
@@ -249,12 +249,12 @@ function eliminar_comentario(boton){
   };
 
 function agregar_megusta(){
-      var idNoticia = $("#idPublicacion").val();
+      var idPublicacion = $("#idPublicacion").val();
 
       $.ajax({
       type: 'POST',
       url: 'me_gusta/',
-      data: {id: idNoticia},
+      data: {id: idPublicacion},
       success: function (data) {
         $("#divComentario").load(" #divComentario");
         $("#divIdBrra").load(" #divIdBrra");

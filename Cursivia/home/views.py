@@ -527,3 +527,95 @@ def MeGustaNoticia(request):
         
         
     return render(request, 'home/publicacion_detail.html')     
+
+
+@csrf_exempt
+def ComentarioPublicacion(request):
+   
+    if request.method=='POST':
+
+        publicacion = get_object_or_404(Publicacion, id = request.POST['id'] )    
+        comentario = request.POST['comentario']
+        usuario = request.user
+        fecha_alta = timezone.now()
+        estado_comentario = 'p'
+        if (comentario == ''):
+            print("Tendriamos que tirar mensaje")        
+        else:
+            comentarioCreado = Comentario(fecha_alta=fecha_alta, publicacion= publicacion, comentario= comentario, estado_comentario= estado_comentario, usuario= usuario )
+            comentarioCreado.save()
+
+    lista_carreras = Carrera.objects.all() 
+    materiasC =[]
+    for l in lista_carreras:
+        materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+
+    return render(request, 'home/tema_detail.html', {'object': comentarioCreado})
+
+@csrf_exempt
+def DenunciarPublicacion(request):
+    if request.method=='POST':
+
+        publicacion = get_object_or_404(Publicacion, id = request.POST['id'] )   
+        cantidad_denuncias = Denuncia.objects.all().filter(publicacion= publicacion).count()
+        print (cantidad_denuncias)
+        if  (cantidad_denuncias >= 3):
+            publicacion.estado_publicacion = 'd'
+            publicacion.save() 
+        comentario = request.POST['comentario']
+        usuario = request.user
+        fecha_alta = timezone.now()
+        if (comentario == ''):
+            print("Tendriamos que tirar mensaje")        
+        else:
+            denuncia = Denuncia(publicacion= publicacion, comentario= comentario, usuario= usuario, fecha_alta= fecha_alta)
+            denuncia.save()
+
+    return render(request, 'home/tema_detail.html', {'object': publicacion})
+   
+
+
+@csrf_exempt
+def EliminarComentarioPublicacion(request):
+    if request.method=='POST':
+
+        comentario = get_object_or_404(Comentario, id = request.POST['id'] )   
+        comentario.fecha_baja = timezone.now()
+        comentario.motivo_baja = "Usuario elimino su comentario"
+        comentario.estado_comentario = 'e'
+
+        print (comentario)
+        comentario.save()
+
+    return render(request, 'home/tema_detail.html')
+
+
+@csrf_exempt
+def MeGustaPublicacion(request):
+    if request.method=='POST':
+        publicacion = get_object_or_404(Publicacion, id = request.POST['id'] )  
+       
+        usuario = request.user
+        fecha_alta = timezone.now()
+
+        try:
+            meGusta = MeGusta.objects.get(publicacion= publicacion, usuario= usuario)
+        except MeGusta.DoesNotExist:
+            meGusta = None
+
+        if (meGusta == None):
+            megusta = MeGusta(publicacion= publicacion, usuario= usuario, fecha_alta= fecha_alta)
+            megusta.save()
+            publicacion.aprovacion =  publicacion.aprovacion + 1
+
+        else:
+            meGustaEliminado = MeGusta.objects.get(publicacion= publicacion, usuario= usuario)
+            meGustaEliminado.delete()
+
+            publicacion.aprovacion =  publicacion.aprovacion - 1
+
+
+        publicacion.save()
+        
+        
+    return render(request, 'home/tema_detail.html')     

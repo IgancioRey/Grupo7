@@ -23,6 +23,11 @@ urlpatterns = [
     url(r'^noticia/denunciar/$', views.DenunciarNoticia, name ='denunciar_noticia'),
     url(r'^noticia/comentario_noticia/delete$', views.EliminarComentarioNoticia, name ='eliminar_comentario_noticia'),
     url(r'^noticia/me_gusta/$', views.MeGustaNoticia, name ='me_gusta_noticia'),
+    url(r'^foroMateria/materia/comentario_publicacion/$', views.ComentarioPublicacion, name ='comentario_publicacion'),
+    url(r'^foroMateria/materia/denunciar/$', views.DenunciarPublicacion, name ='denunciar_publicacion'),
+    url(r'^foroMateria/materia/comentario_publicacion/delete$', views.EliminarComentarioPublicacion, name ='eliminar_comentario_publicacion'),
+    url(r'^foroMateria/materia/me_gusta/$', views.MeGustaPublicacion, name ='me_gusta_publicacion'),
+
 
     #url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail'),
 	# url(r'^user/new/$', views.new_user, name='new-user'),
