@@ -113,7 +113,12 @@ class Publicacion(models.Model):
         """
         Devuelve el URL a una instancia particular de la publicacion
         """
-        return reverse('publicacion-detail', args=[str(self.id)])
+        if self.tipo_publicacion == 'n':
+            url = 'publicacion-detail'
+        elif self.tipo_publicacion == 'f':
+            url = 'tema-detail'
+            
+        return reverse(url, args=[str(self.id)])
     
     def get_aboslute_url_modificar(self): 
         return reverse ('noticia_update', args=[str(self.id)])

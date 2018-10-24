@@ -139,6 +139,56 @@ class noticiaDetailForm(FormMixin,generic.DetailView):
 
         return lista_meGusta_usuario
 
+class publicacionDetailForm(FormMixin,generic.DetailView):
+    template_name='home/tema_detail.html'
+    model = Publicacion
+    form_class = formNoticia
+
+
+    lista_carreras = Carrera.objects.all() 
+
+    def get_success_url(self):
+        return reverse('tema-detail', kwargs={'pk': self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(publicacionDetailForm, self).get_context_data(**kwargs)
+        context['form'] = formNoticia(initial={'post': self.object})
+        return context
+
+    def menuCarreras(self):
+        lista_carreras = Carrera.objects.all() 
+        materiasC =[]
+        for l in lista_carreras:
+            materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+        return materiasC
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.save()
+        return super(publicacionDetailForm, self).form_valid(form)
+
+    def get_comentarios(self):
+        publicacion = get_object_or_404(Publicacion, id = self.object.id )    
+        lista_comentario = Comentario.objects.all().filter(publicacion= publicacion, estado_comentario= 'p')
+        return lista_comentario
+    
+    def get_megusta(self):
+        publicacion = get_object_or_404(Publicacion, id =   self.object.id )  
+        lista_meGusta = MeGusta.objects.all().filter(publicacion= publicacion)
+        
+        lista_meGusta_usuario =[]
+        for l in lista_meGusta:
+            lista_meGusta_usuario.append(l.usuario.id)
+
+        return lista_meGusta_usuario
+
 
 def registracion(request):
     if request.method=='POST':
