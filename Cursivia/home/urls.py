@@ -11,6 +11,7 @@ urlpatterns = [
 	url(r'^bienvenido/(?P<tokenActivacion>\w+)/', views.bienvenido, name = 'bienvenido'),
 	url(r'^configuracionCuenta/$', views.configuracionCuenta, name='configuracionCuenta'),
 	url(r'^noticia/(?P<pk>\d+)$', views.noticiaDetailForm.as_view(), name="publicacion-detail"),
+    url(r'^foroMateria/materia/(?P<pk>\d+)$', views.publicacionDetailForm.as_view(), name="tema-detail"),
 	url(r'^noticia/create/$', views.NoticiaCreate.as_view(), name='noticia_create'),
     url(r'^noticia/(?P<pk>\d+)/update/$', views.NoticiaUpdate.as_view(), name='noticia_update'),
     url(r'^noticia/(?P<pk>\d+)/delete/$', views.NoticiaDelete, name='noticia_delete'),
@@ -22,6 +23,11 @@ urlpatterns = [
     url(r'^noticia/denunciar/$', views.DenunciarNoticia, name ='denunciar_noticia'),
     url(r'^noticia/comentario_noticia/delete$', views.EliminarComentarioNoticia, name ='eliminar_comentario_noticia'),
     url(r'^noticia/me_gusta/$', views.MeGustaNoticia, name ='me_gusta_noticia'),
+    url(r'^foroMateria/materia/comentario_publicacion/$', views.ComentarioPublicacion, name ='comentario_publicacion'),
+    url(r'^foroMateria/materia/denunciar/$', views.DenunciarPublicacion, name ='denunciar_publicacion'),
+    url(r'^foroMateria/materia/comentario_publicacion/delete$', views.EliminarComentarioPublicacion, name ='eliminar_comentario_publicacion'),
+    url(r'^foroMateria/materia/me_gusta/$', views.MeGustaPublicacion, name ='me_gusta_publicacion'),
+
 
 
     #url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail'),
