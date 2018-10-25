@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+
+{% block sidebar %}
+<div class="sidebar-wrapper">
+
+<aside class="widget widget_categories">
+  <h2 class="widget-title"> Foro Carreras</h2>  
+  <ul>
+
+	{% for carrera,materia in lista_cantMaterias %} 
+	    <li><a href="{% url 'foro_carrera' carrera.id %}"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }}</span></a></li>
+	{% endfor %}     
+  </ul>
+</aside>
+
+</div>
+
+{% endblock sidebar %}
+
+
+{% block content %}
+
+
+<form method="post" action="">
+    {% csrf_token %}
+    <label for="group_name">{% trans "Nombre del grupo" %}</label>
+    <input type="text" value="{{ group_name }}" class="form-control" name="group_name">
+    <div class="help-block">{% trans 'Solamente se permiten letras, números, "." y "-". Debe empezar con una letra' %} 
+    </div>
+    <button class="btn btn-primary">{% trans "Crear Grupo" %}</button>
+</form>
+
+
+
+{% endblock content %}

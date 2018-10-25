@@ -1,9 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from django.db.models.signals import post_save
 from django.utils import timezone
 import datetime, string
 from django.http import HttpResponseRedirect
 from django.urls import reverse 
+from django.conf import settings
+import re
 
 # Create your models here.
 class Carrera (models.Model):
@@ -81,6 +84,7 @@ class Publicacion(models.Model):
         ('n', 'Noticia'),
         ('d', 'Documentacion'),
         ('f', 'Foro'),
+        ('g', 'Grupo')
     )
     materia = models.ForeignKey(Materia, on_delete=models.CASCADE, null=True, blank=True, default='')
     titulo = models.CharField(max_length=100)
@@ -97,6 +101,7 @@ class Publicacion(models.Model):
     aprovacion = models.IntegerField(null=True, blank=True, default=0)
     denuncias = models.IntegerField(null=True, blank=True, default=0)
     image = models.ImageField(upload_to='images/', null=True, blank=True, default='#')
+    grupo = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True, default='')
 
     def __str__(self):
         return self.titulo
@@ -117,7 +122,7 @@ class Publicacion(models.Model):
             url = 'publicacion-detail'
         elif self.tipo_publicacion == 'f':
             url = 'tema-detail'
-            
+
         return reverse(url, args=[str(self.id)])
     
     def get_aboslute_url_modificar(self): 
@@ -180,3 +185,104 @@ class MeGusta(models.Model):
     def __str__(self):
         return self.usuario.username
 
+
+"""
+GRUPOS
+"""
+MIN_GROUPNAME_LENGTH = 5
+
+class GroupError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+
+class GroupProperties(models.Model):
+    group = models.OneToOneField(Group, related_name='properties', on_delete=models.CASCADE)
+    admins = models.ManyToManyField(settings.AUTH_USER_MODEL,
+            related_name='admin_of')
+    public_members = models.BooleanField(default=False)
+
+class GroupProxy(object):
+    def __init__(self, group):
+        self.group = group
+
+    def add_member(self, user):
+        group = self.group
+        group.user_set.add(user)
+
+    def remove_member(self, user, check_sole_admin=False):
+            properties = self.group.properties
+            if check_sole_admin:
+                self._raise_if_sole_admin(user)
+            properties.admins.remove(user)
+            self.group.user_set.remove(user)
+    
+    def grant_admin(self, user):
+        self.group.properties.admins.add(user)
+
+    def revoke_admin(self, user):
+        self._raise_if_sole_admin(user)
+        self.group.properties.admins.remove(user)
+
+    def is_admin(self, user):
+        return bool(self.group.properties.admins.filter(pk=user.pk).count())
+
+    def is_member(self, user):
+        return bool(self.group.user_set.filter(pk=user.pk).count())
+
+    def _raise_if_sole_admin(self, user):
+        properties = self.group.properties
+        if self.is_admin(user):
+            num_admins = properties.admins.count()
+            if num_admins == 1:
+                msg = ('You are the sole group admin. Please terminate the group or appoint another group admin.')
+                raise GroupError(msg)
+
+
+class GroupInvitation(models.Model):
+    date_invited = models.DateTimeField(default=timezone.now)
+    group = models.ForeignKey(Group, related_name='invitations', on_delete=models.CASCADE)
+    invitee = models.ForeignKey(settings.AUTH_USER_MODEL,
+            related_name='invitations', on_delete=models.CASCADE)
+    invited_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+            related_name='given_invitations', on_delete=models.CASCADE)
+
+    def __unicode__(self):
+        return u'Invitation to {0} for {1}'.format(self.group, self.invitee)
+
+    def accept(self):
+        group_proxy = GroupProxy(self.group)
+        group_proxy.add_member(self.invitee)
+        self.delete()
+
+    def refuse(self):
+        self.delete()
+
+_group_name_re = re.compile(r'^[a-zA-Z]([a-zA-Z0-9-]*)$')
+def create_usergroup(user, name):
+    if not _group_name_re.match(name):
+        raise GroupError(_('Nombre invalido'))
+
+    if len(name) < 5:
+        err_msg = ('El nombre del grupo debe tener 5 caracteres como mínimo')
+        raise GroupError(err_msg)
+    
+    if Group.objects.filter(name__iexact=name).count():
+        raise GroupError(('El grupo ya existe'))
+    
+    group = Group.objects.create(name=name)
+
+    group_proxy = GroupProxy(group)
+    group_proxy.add_member(user)
+
+    group.properties.admins.add(user)
+
+    return group
+
+
+def _change_group_cb(sender, instance, created, **kwargs):
+    if created:
+        props = GroupProperties.objects.create(group=instance)
+        instance.properties = props
+
+post_save.connect(_change_group_cb, sender=Group)

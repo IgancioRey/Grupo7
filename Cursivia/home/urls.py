@@ -12,6 +12,7 @@ urlpatterns = [
 	url(r'^configuracionCuenta/$', views.configuracionCuenta, name='configuracionCuenta'),
 	url(r'^noticia/(?P<pk>\d+)$', views.noticiaDetailForm.as_view(), name="publicacion-detail"),
     url(r'^foroMateria/materia/(?P<pk>\d+)$', views.publicacionDetailForm.as_view(), name="tema-detail"),
+    url(r'^foroMateria/publicacion/create/$', views.PublicacionCreate.as_view(), name="tema-create"),
 	url(r'^noticia/create/$', views.NoticiaCreate.as_view(), name='noticia_create'),
     url(r'^noticia/(?P<pk>\d+)/update/$', views.NoticiaUpdate.as_view(), name='noticia_update'),
     url(r'^noticia/(?P<pk>\d+)/delete/$', views.NoticiaDelete, name='noticia_delete'),
@@ -27,7 +28,10 @@ urlpatterns = [
     url(r'^foroMateria/materia/denunciar/$', views.DenunciarPublicacion, name ='denunciar_publicacion'),
     url(r'^foroMateria/materia/comentario_publicacion/delete$', views.EliminarComentarioPublicacion, name ='eliminar_comentario_publicacion'),
     url(r'^foroMateria/materia/me_gusta/$', views.MeGustaPublicacion, name ='me_gusta_publicacion'),
-
+    url(r'^grupo/create$', views.grupoCreate, name='groups_create'),
+    url(r'^grupo/list/$', views.gruposList, name='groups_list'),
+    #url(r'^grupo/([a-zA-Z0-9_-]+)/$', show, name='groups_detail'),
+    url(r'^foroGrupo/([a-zA-Z0-9_-]+)/$', views.foroGrupo, name ='foro_grupo'), 
 
 
     #url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail'),

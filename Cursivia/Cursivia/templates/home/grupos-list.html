@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+
+{% block sidebar %}
+<div class="sidebar-wrapper">
+
+<aside class="widget widget_categories">
+  <h2 class="widget-title"> Foro Carreras</h2>  
+  <ul>
+
+    {% for carrera,materia in lista_cantMaterias %} 
+        <li><a href="{% url 'foro_carrera' carrera.id %}"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }}</span></a></li>
+    {% endfor %}     
+  </ul>
+</aside>
+
+</div>
+
+{% endblock sidebar %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="entry-title">Grupos</h2>
+        <div class="mt-30"></div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Nombre</th> 
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for grupo in grupos %}
+
+            <tr>
+                <th scope="row"> <h3><a href="{% url 'foro_grupo' grupo.name %}">{{ grupo.name }}</a></h3></th> 
+            </tr>
+            
+            {% endfor %} 
+
+            </tbody>
+        </table>
+    </div>
+</div><!-- /.row --> 
+
+
+
+
+{% endblock content %}

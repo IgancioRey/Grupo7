@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from django.contrib.auth import authenticate, login, logout
 from .models import Publicacion, Carrera, Materia, Usuario, Comentario, Denuncia, MeGusta
+from .models import GroupInvitation, GroupProxy, GroupError, create_usergroup 
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
@@ -47,48 +48,7 @@ def index(request):
 
 
     return render(request, 'index.html', {'noticias': noticias, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC})
-    """
-    # Genera contadores de algunos de los objetos principales
-    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
-    lista_aux=[]
-    noticias_final=[]
-    x=0
-    for noticia in lista_noticias:
-        if len(lista_aux)<2:
-            lista_aux.append(noticia)
-            x=x+1
-        else:
-            x=0
-            lista_aux=[]
-            noticias_final.append(lista_aux)
-    
-    numero_materias = []
-    lista_materias =  []
-    lista_carreras = Carrera.objects.all()
-    for c in lista_carreras:
-        lista_materias.append((c.descripcion,Materia.objects.filter(carrera__exact =c).count()))
-
-    # Publicaciones que sean noticias (tipoPublicacion = 'n')
-    # numero_noticias = Publicacion.objects.filter(tipoPublicacion__exact='n').count()
-    # Publicaciones que sean documentacion (tipoPublicacion = 'd')
-    # numero_documentacion = Publicacion.objects.filter(tipoPublicacion__exact='d').count()
-
-    # Renderiza la plantilla HTML index.html con los datos en la variable contexto
-    return render(
-        request,
-        'index.html', 
-        context={'lista_noticias': noticias_final, 'numero_materias': numero_materias,
-                 'lista_carreras': lista_carreras},
-    )
-    """
-"""
-class noticiaDetailView(LoginRequiredMixin,generic.DetailView):
-    model = Publicacion
-    #queryset = Publicacion.objects.all().filter(tipo_publicacion__exact='n').order_by('-fecha_alta')
-    login_url = '/accounts/login/'
-    redirect_field_name = 'redirect_to'
-"""   
-
+  
 
 class noticiaDetailForm(FormMixin,generic.DetailView):
     template_name='home/publicacion_detail.html'
@@ -189,6 +149,39 @@ class publicacionDetailForm(FormMixin,generic.DetailView):
             lista_meGusta_usuario.append(l.usuario.id)
 
         return lista_meGusta_usuario
+
+class PublicacionCreate(LoginRequiredMixin, CreateView):
+    model = Publicacion
+    fields = ['estado_publicacion']
+
+    def post(self, request, *args, **kwargs):        
+        titulo = request.POST['titulo']
+        cuerpo = request.POST['cuerpo']
+        usuario = request.user
+        tipo_publicacion =  'f'
+        estado_publicacion = request.POST['estado_publicacion']
+
+        try:
+            image = request.FILES['image']
+            noticia = Publicacion(image = image, titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario )
+        except Exception as e:
+            noticia = Publicacion(titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario )
+            print (e)
+
+        noticia.save()
+        prueba = get_object_or_404(Publicacion, pk=noticia.id)
+        return render(request, 'home/tema_detail.html', {'object': prueba})
+    
+    def menuCarreras(self):
+        lista_carreras = Carrera.objects.all() 
+        materiasC =[]
+        for l in lista_carreras:
+            materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+        return materiasC
+    
+    def usuarioNoLogueado():
+        login_url = '/accounts/login/'
+        redirect_field_name = 'redirect_to'
 
 
 def registracion(request):
@@ -366,19 +359,8 @@ def ForoGeneral(request):
 
 
     return render(request, 'home/foro_general.html', {'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC})
-"""
-def ForoCarrera(request, pk):
-
-    carrera = get_object_or_404(Carrera, id = pk ) 
-    materias = Materia.objects.all().filter(carrera =carrera).order_by('año')
-
-    materiasA =[]
-    for l in range(1,carrera.cant_años+1):
-        materiasA.append([l,Materia.objects.all().filter(carrera=l, año=l)])
 
 
-    return render(request, 'home/foro_carrera.html', {'lista_materias': materiasA})
-"""
 
 class ForoCarreraForm(FormMixin,generic.DetailView):
     template_name='home/foro_carrera.html'
@@ -633,3 +615,88 @@ def MeGustaPublicacion(request):
         
         
     return render(request, 'home/tema_detail.html')     
+
+
+
+    """
+    GRUPOS
+    """
+@login_required
+def grupoCreate(request):
+    error = None
+    group_name = ''
+    if request.method == 'POST':
+        group_name = request.POST.get('group_name', '')
+        try:
+            create_usergroup(request.user, group_name)
+            msg = ('Se ha creado el grupo "{0}".').format(group_name)
+            messages.success(request, msg)
+            #return redirect('groups_show', group_name)
+            return redirect('/')
+        except GroupError as e:
+            error = e.message
+
+    lista_carreras = Carrera.objects.all() 
+    materiasC =[]
+    for l in lista_carreras: 
+        materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+    return render(request, 'home/grupo_form.html', { 
+        'group_name': group_name,
+        'lista_cantMaterias': materiasC
+    })
+
+    return redirect('/')
+
+
+@login_required
+def gruposList(request):
+    groups = request.user.groups.order_by('name').all()
+    lista_carreras = Carrera.objects.all() 
+    materiasC =[]
+    for l in lista_carreras: 
+        materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+    return render(request, 'home/grupos-list.html', {'grupos': groups,'lista_cantMaterias': materiasC})
+
+
+@csrf_exempt
+def foroGrupo(request,group_name):
+    group= get_object_or_404(Group, name = group_name)  
+    print('Grupo:',group.id) 
+    if request.method=='POST':
+
+        cuerpo = request.POST['cuerpo']
+        usuario = request.user
+        grupo = group_name
+        fecha_alta = timezone.now()
+        estado_publicacion = 'p'
+        tipo_publicacion = 'g'
+        titulo = "Publicacion - Grupo"
+        if (cuerpo == ''):
+            print("Tendriamos que tirar mensaje")        
+        else:
+            publicacion = Publicacion(titulo = titulo, tipo_publicacion = tipo_publicacion, cuerpo= cuerpo, estado_publicacion= estado_publicacion, usuario= usuario )
+            publicacion.save()
+        
+
+    lista_publicaciones = Publicacion.objects.all().filter(grupo=group,tipo_publicacion__exact='g', estado_publicacion__exact='p').order_by('-fecha_alta')
+    lista_carreras = Carrera.objects.all() 
+
+
+    lista_publicaciones_comentarios=[]
+    for l in lista_publicaciones: 
+        lista_meGusta = MeGusta.objects.all().filter(publicacion= l)
+        lista_meGusta_usuario =[]
+        for lista in lista_meGusta:
+            lista_meGusta_usuario.append(lista.usuario.id)
+
+        lista_publicaciones_comentarios.append([l,Comentario.objects.all().filter(publicacion__exact=l, estado_comentario__exact='p').order_by('fecha_alta'), lista_meGusta_usuario])
+
+
+    materiasC =[]
+    for l in lista_carreras:
+        materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+
+
+    return render(request, 'home/grupo-foro.html', {'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group_name': group_name})
+
+

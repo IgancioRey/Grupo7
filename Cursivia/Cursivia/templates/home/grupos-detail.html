@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block sidebar %}
+  <div class="sidebar-wrapper">
+
+  <aside class="widget widget_categories">
+    <h2 class="widget-title">Foro Carreras</h2>  
+    <ul>
+
+    {% for carrera,materia in view.menuCarreras %}
+        <li><a href="{% url 'foro_carrera' carrera.id %}"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }} </span></a></li>
+    {% endfor %}     
+    </ul>
+  </aside>
+
+  </div>
+{% endblock sidebar %}
+
+{% block content %}
+
+
+{% endblock content %}
