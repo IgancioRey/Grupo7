@@ -101,7 +101,7 @@ class Publicacion(models.Model):
     aprovacion = models.IntegerField(null=True, blank=True, default=0)
     denuncias = models.IntegerField(null=True, blank=True, default=0)
     image = models.ImageField(upload_to='images/', null=True, blank=True, default='#')
-    grupo = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True, default='')
+    #grupo = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True, default='')
 
     def __str__(self):
         return self.titulo
