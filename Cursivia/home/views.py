@@ -149,7 +149,7 @@ class publicacionDetailForm(FormMixin,generic.DetailView):
             lista_meGusta_usuario.append(l.usuario.id)
 
         return lista_meGusta_usuario
-
+"""
 class PublicacionCreate(LoginRequiredMixin, CreateView):
     model = Publicacion
     fields = ['estado_publicacion']
@@ -182,7 +182,7 @@ class PublicacionCreate(LoginRequiredMixin, CreateView):
     def usuarioNoLogueado():
         login_url = '/accounts/login/'
         redirect_field_name = 'redirect_to'
-
+"""
 
 def registracion(request):
     if request.method=='POST':
