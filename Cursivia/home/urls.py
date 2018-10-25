@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^noticia/comentario_noticia/delete$', views.EliminarComentarioNoticia, name ='eliminar_comentario_noticia'),
     url(r'^noticia/me_gusta/$', views.MeGustaNoticia, name ='me_gusta_noticia'),
 
+
     #url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail'),
 	# url(r'^user/new/$', views.new_user, name='new-user'),
 	#url(r'^nuevaNoticia/$', views.nuevaNoticia, name="nuevaNoticia"),

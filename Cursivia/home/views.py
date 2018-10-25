@@ -18,7 +18,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-
+import json  
+from django.http import JsonResponse
 
 def index(request):
     """
@@ -278,9 +279,8 @@ def NoticiaDelete(request, pk):
     noticia.save()
     return redirect('/')
 
-
+@csrf_exempt
 def ForoGeneral(request):
-
     if request.method=='POST':
 
         cuerpo = request.POST['cuerpo']
@@ -299,12 +299,23 @@ def ForoGeneral(request):
     lista_publicaciones = Publicacion.objects.all().filter(tipo_publicacion__exact='f', estado_publicacion__exact='p').order_by('-fecha_alta')
     lista_carreras = Carrera.objects.all() 
 
+
+    lista_publicaciones_comentarios=[]
+    for l in lista_publicaciones: 
+        lista_meGusta = MeGusta.objects.all().filter(publicacion= l)
+        lista_meGusta_usuario =[]
+        for lista in lista_meGusta:
+            lista_meGusta_usuario.append(lista.usuario.id)
+
+        lista_publicaciones_comentarios.append([l,Comentario.objects.all().filter(publicacion__exact=l, estado_comentario__exact='p').order_by('fecha_alta'), lista_meGusta_usuario])
+
+
     materiasC =[]
     for l in lista_carreras:
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
 
-    return render(request, 'home/foro_general.html', {'lista_publicaciones': lista_publicaciones, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC})
+    return render(request, 'home/foro_general.html', {'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC})
 """
 def ForoCarrera(request, pk):
 
@@ -392,7 +403,7 @@ def ComentarioNoticia(request):
    
     if request.method=='POST':
 
-        noticia = get_object_or_404(Publicacion, id = request.POST['id'] )    
+        noticia = get_object_or_404(Publicacion, id = request.POST['id'] )
         comentario = request.POST['comentario']
         usuario = request.user
         fecha_alta = timezone.now()
@@ -408,7 +419,11 @@ def ComentarioNoticia(request):
     for l in lista_carreras:
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
-    return render(request, 'home/publicacion_detail.html', {'object': comentarioCreado})
+    data = {
+               'mensaje' : "Denuncia Exitosa"
+            } 
+
+    return JsonResponse(data)
 
 @csrf_exempt
 def DenunciarNoticia(request):
@@ -442,7 +457,6 @@ def EliminarComentarioNoticia(request):
         comentario.motivo_baja = "Usuario elimino su comentario"
         comentario.estado_comentario = 'e'
 
-        print (comentario)
         comentario.save()
 
     return render(request, 'home/publicacion_detail.html')
