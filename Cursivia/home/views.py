@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from django.contrib.auth import authenticate, login, logout
 from .models import Publicacion, Carrera, Materia, Usuario, Comentario, Denuncia, MeGusta
-from .models import GroupInvitation, GroupProxy, GroupError, create_usergroup 
+#from .models import GroupInvitation, GroupProxy, GroupError, create_usergroup 
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
@@ -621,6 +621,8 @@ def MeGustaPublicacion(request):
     """
     GRUPOS
     """
+
+"""    
 @login_required
 def grupoCreate(request):
     error = None
@@ -700,3 +702,4 @@ def foroGrupo(request,group_name):
     return render(request, 'home/grupo-foro.html', {'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group_name': group_name})
 
 
+"""

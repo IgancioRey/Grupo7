@@ -189,6 +189,7 @@ class MeGusta(models.Model):
 """
 GRUPOS
 """
+"""
 MIN_GROUPNAME_LENGTH = 5
 
 class GroupError(Exception):
@@ -286,3 +287,4 @@ def _change_group_cb(sender, instance, created, **kwargs):
         instance.properties = props
 
 post_save.connect(_change_group_cb, sender=Group)
+"""
