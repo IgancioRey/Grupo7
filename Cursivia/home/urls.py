@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^foroMateria/materia/me_gusta/$', views.MeGustaPublicacion, name ='me_gusta_publicacion'),
 
 
+
     #url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail'),
 	# url(r'^user/new/$', views.new_user, name='new-user'),
 	#url(r'^nuevaNoticia/$', views.nuevaNoticia, name="nuevaNoticia"),
