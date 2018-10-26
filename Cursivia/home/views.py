@@ -618,11 +618,10 @@ def MeGustaPublicacion(request):
 
 
 
-    """
-    GRUPOS
-    """
+"""
+GRUPOS
+"""
 
-"""    
 @login_required
 def grupoCreate(request):
     error = None
@@ -702,4 +701,3 @@ def foroGrupo(request,group_name):
     return render(request, 'home/grupo-foro.html', {'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group_name': group_name})
 
 
-"""

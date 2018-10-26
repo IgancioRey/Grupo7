@@ -28,10 +28,10 @@ urlpatterns = [
     url(r'^foroMateria/materia/denunciar/$', views.DenunciarPublicacion, name ='denunciar_publicacion'),
     url(r'^foroMateria/materia/comentario_publicacion/delete$', views.EliminarComentarioPublicacion, name ='eliminar_comentario_publicacion'),
     url(r'^foroMateria/materia/me_gusta/$', views.MeGustaPublicacion, name ='me_gusta_publicacion'),
-    #url(r'^grupo/create$', views.grupoCreate, name='groups_create'),
-    #url(r'^grupo/list/$', views.gruposList, name='groups_list'),
+    url(r'^grupo/create$', views.grupoCreate, name='groups_create'),
+    url(r'^grupo/list/$', views.gruposList, name='groups_list'),
     #url(r'^grupo/([a-zA-Z0-9_-]+)/$', show, name='groups_detail'),
-    #url(r'^foroGrupo/([a-zA-Z0-9_-]+)/$', views.foroGrupo, name ='foro_grupo'), 
+    url(r'^foroGrupo/([a-zA-Z0-9_-]+)/$', views.foroGrupo, name ='foro_grupo'), 
 
 
     #url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail'),
