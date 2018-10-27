@@ -171,10 +171,12 @@ class Denuncia(models.Model):
 
     comentario = models.CharField(max_length=1000, null=True, blank=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
+    publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE, null=True, blank=True)
     fecha_alta = models.DateTimeField(default=timezone.now, null=True)
     fecha_baja = models.DateTimeField(null=True, blank=True)
     motivo_baja = models.CharField(max_length=200, null=True, blank=True)
+    usuarioDenunciado = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
+
    
     def __str__(self):
         return self.comentario
