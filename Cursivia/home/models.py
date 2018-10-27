@@ -164,6 +164,10 @@ class Comentario(models.Model):
     def __str__(self):
         return self.comentario
 
+
+    def get_aboslute_url_usuario_autor(self):
+        return reverse ('perfil_usuario', args=[str(self.usuario.id)])
+
 class Denuncia(models.Model):
     """
     Modelo que representa una publicacion, tanto noticia como documento.
@@ -180,6 +184,7 @@ class Denuncia(models.Model):
    
     def __str__(self):
         return self.comentario
+
 
 class MeGusta(models.Model):
     """

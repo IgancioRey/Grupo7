@@ -166,7 +166,7 @@
                 <div class="media-body">
                     <div class="comment-info">
                         <div class="comment-author">
-                            <a href="#">{{ comentario.usuario }}</a>
+                            <a href="{{comentario.get_aboslute_url_usuario_autor}}">{{ comentario.usuario }}</a>
                             {% if user.id == comentario.usuario.id %}
                               <button id="button_eliminar" type="button" class="close" value="{{comentario.id}}" onclick="eliminar_comentario(this)">
                                 <span aria-hidden="true">&times;</span>
@@ -224,11 +224,12 @@
 function denuncia_noticia(){
       var comentario = $("#id_comentarioDenuncia").val();
       var idNoticia = $("#idPublicacion").val();
+      var tipo = "publicacion"
 
       $.ajax({
       type: 'POST',
       url: 'denunciar/',
-      data: {id: idNoticia, comentario: comentario},
+      data: {id: idNoticia, comentario: comentario, tipo_denuncia: tipo},
       success: function (data) {
         $("#divComentario").load(" #divComentario");
         $("#id_comentarioDenuncia").val("");

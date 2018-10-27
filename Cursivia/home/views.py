@@ -352,7 +352,7 @@ def ForoGeneral(request):
             publicacion.save()
         
 
-    lista_publicaciones = Publicacion.objects.all().filter(tipo_publicacion__exact='f', estado_publicacion__exact='p').order_by('-fecha_alta')
+    lista_publicaciones = Publicacion.objects.all().filter(tipo_publicacion__exact='f', estado_publicacion__exact='p', materia__exact=None).order_by('-fecha_alta')
     lista_carreras = Carrera.objects.all() 
 
 
@@ -472,24 +472,44 @@ def ComentarioNoticia(request):
 
 @csrf_exempt
 def DenunciarNoticia(request):
-    if request.method=='POST':
+    if request.method=='POST':        
 
-        noticia = get_object_or_404(Publicacion, id = request.POST['id'] )   
-        cantidad_denuncias = Denuncia.objects.all().filter(publicacion= noticia).count()
-        print (cantidad_denuncias)
-        if  (cantidad_denuncias >= 3):
-            noticia.estado_publicacion = 'd'
-            noticia.save() 
+        tipo_denuncia = request.POST['tipo_denuncia']
         comentario = request.POST['comentario']
         usuario = request.user
         fecha_alta = timezone.now()
-        if (comentario == ''):
-            print("Tendriamos que tirar mensaje")        
-        else:
-            denuncia = Denuncia(publicacion= noticia, comentario= comentario, usuario= usuario, fecha_alta= fecha_alta)
-            denuncia.save()
+        
 
-    return render(request, 'home/publicacion_detail.html', {'object': noticia})
+        if (tipo_denuncia == 'publicacion'):
+            noticia = get_object_or_404(Publicacion, id = request.POST['id'] )   
+            cantidad_denuncias = Denuncia.objects.all().filter(publicacion= noticia).count()
+            if  (cantidad_denuncias >= 3):
+                noticia.estado_publicacion = 'd'
+                noticia.save() 
+
+            if (comentario == ''):
+                print("Tendriamos que tirar mensaje")        
+            else:
+                denuncia = Denuncia(publicacion= noticia, comentario= comentario, usuario= usuario, fecha_alta= fecha_alta)
+                denuncia.save()
+
+        else:
+            print("ENTRA!")        
+
+            usuarioDenunciado = get_object_or_404(Usuario, id = request.POST['id'] )
+
+            cantidad_denuncias = Denuncia.objects.all().filter(usuarioDenunciado= usuarioDenunciado).count()
+            if  (cantidad_denuncias >= 3):
+                usuarioDenunciado.estado = 's'
+                usuarioDenunciado.save() 
+
+            if (comentario == ''):
+                print("Tendriamos que tirar mensaje")        
+            else:
+                denuncia = Denuncia(usuarioDenunciado= usuarioDenunciado, comentario= comentario, usuario= usuario, fecha_alta= fecha_alta)
+                denuncia.save()
+
+    return render(request, 'home/publicacion_detail.html')
    
 
 
@@ -688,7 +708,7 @@ def foroGrupo(request,group_name):
         if (cuerpo == ''):
             print("Tendriamos que tirar mensaje")        
         else:
-            publicacion = Publicacion(titulo = titulo, tipo_publicacion = tipo_publicacion, cuerpo= cuerpo, estado_publicacion= estado_publicacion, usuario= usuario )
+            publicacion = Publicacion(titulo = titulo, tipo_publicacion = tipo_publicacion, cuerpo= cuerpo, estado_publicacion= estado_publicacion, usuario= usuario, grupo = grupo )
             publicacion.save()
         
 

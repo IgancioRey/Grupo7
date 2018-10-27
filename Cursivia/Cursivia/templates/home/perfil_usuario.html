@@ -19,42 +19,12 @@
 
 {% block content %}
 
-
-    <button class="btn btn-primary" type="submit" data-toggle="modal" data-target="#ModalConfirmarDenuncia">Denunciar usuario
-        <i class="mdi-content-send right"></i>
-    </button>
-        
-    <p></p>
-
-    <!-- /.modal -->
-   
-      <div class="modal fade" id="ModalConfirmarDenuncia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <h3 class="modal-title" id="exampleModalLabel">Está seguro que desea denunciar al usuario?</h3>
-            </div>
-            <div class="modal-body">
-                <input name="idPublicacion" class="form-control" id="idPublicacion" type="hidden" value="">
-                <textarea name="comentarioDenuncia" class="form-control" id="id_comentarioDenuncia" placeholder="Ingrese el motivo por el cual esta denunciando este usuario" type="text" rows="4"></textarea>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-              <button type="submit" name="action" class="btn btn-success" data-dismiss="modal" onclick="denuncia_usuario()">Denunciar Usuario</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    <!-- /.modal -->
-
    <section class="history-section">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-6 col-md-5 no-padding">
-                        <div class="history-cover"></div>
+                        <img src="{% static 'assets/images/perfil.jpg ' %}" alt="image">
+
                     </div><!-- /.col-md-6 -->
                     <div class="col-lg-6 col-md-7 no-padding">
 
@@ -115,143 +85,64 @@
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
         </section>
+      </br>
+        <button class="btn btn-primary" type="submit" data-toggle="modal" data-target="#ModalConfirmarDenuncia">Denunciar usuario
+        <i class="mdi-content-send right"></i>
+        </button>
+            
 
 
-{% endblock %}
+        <!-- /.modal -->
+       
+          <div class="modal fade" id="ModalConfirmarDenuncia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h3 class="modal-title" id="exampleModalLabel">Está seguro que desea denunciar al usuario?</h3>
+                </div>
+                <div class="modal-body">
+                    <input name="idPublicacion" class="form-control" id="idPublicacion" type="hidden" value="">
+                    <textarea name="comentarioDenuncia" class="form-control" id="id_comentarioDenuncia" placeholder="Ingrese el motivo por el cual esta denunciando este usuario" type="text" rows="4"></textarea>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                  <button type="submit" name="action" class="btn btn-success" data-dismiss="modal" onclick="denuncia_usuario({{usuario.id}})">Denunciar Usuario</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- /.modal -->
+
+
 
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
 <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
-<script src="{% static 'assets/js/scripts.js' %}"></script>
-<script src="{% static 'assets/js/particles.min.js' %}"></script>
-
 <script>
-
-function denuncia_usuario(id){
+    function denuncia_usuario(id){
       var comentario = $("#id_comentarioDenuncia").val();
+      tipo = "usuario"
 
       $.ajax({
       type: 'POST',
-      url: 'denunciar/',
-      data: {id: id, comentario: comentario},
+      url: '/home/noticia/denunciar/',
+      data: {id: id, comentario: comentario, tipo_denuncia: tipo},
       success: function (data) {
         $("#id_comentarioDenuncia").val("");
+        $('body').css('overflow', 'auto');
+
       },
       error: function(data) {
       }
     });
-  };
-  </script>
+  };  
+</script>
 
-
-
-    <script type="text/javascript">
-        function vidplay() {
-          var video = document.getElementById("videoPlayer");
-          var button = document.getElementById("playbtn");
-          if (video.paused) {
-            video.play();
-            button.className = "pause"
-          } else {
-            video.pause();
-            button.className = "play"
-          }
-        }
-    </script>
-    <script type="text/javascript">
-        particlesJS("particles-js", {
-          "particles": {
-            "number": {
-              "value": 100,
-              "density": {
-                "enable": true,
-                "value_area":1000
-              }
-            },
-            "color": {
-              "value": ["#aa73ff", "#f8c210", "#83d238", "#33b1f8"]
-            },
-
-            "shape": {
-              "type": "circle",
-              "stroke": {
-                "width": 0,
-                "color": "#fff"
-              }
-            },
-            "opacity": {
-              "value": 0.6,
-              "random": false,
-              "anim": {
-                "enable": false,
-                "speed": 1,
-                "opacity_min": 0.1,
-                "sync": false
-              }
-            },
-            "size": {
-              "value": 2,
-              "random": true,
-              "anim": {
-                "enable": false,
-                "speed": 40,
-                "size_min": 0.1,
-                "sync": false
-              }
-            },
-            "line_linked": {
-              "enable": true,
-              "distance": 120,
-              "color": "#ffffff",
-              "opacity": 0.4,
-              "width": 1
-            },
-          },
-          "interactivity": {
-            "detect_on": "canvas",
-            "events": {
-              "onhover": {
-                "enable": true,
-                "mode": "grab"
-              },
-              "onclick": {
-                "enable": true
-              },
-              "resize": true
-            },
-            "modes": {
-              "grab": {
-                "distance": 140,
-                "line_linked": {
-                  "opacity": 1
-                }
-              },
-              "bubble": {
-                "distance": 400,
-                "size": 40,
-                "duration": 2,
-                "opacity": 8,
-                "speed": 3
-              },
-              "repulse": {
-                "distance": 200,
-                "duration": 0.4
-              },
-              "push": {
-                "particles_nb": 4
-              },
-              "remove": {
-                "particles_nb": 2
-              }
-            }
-          },
-          "retina_detect": true
-        });
-    </script>
-
-
-
+{% endblock %}
 
 
 

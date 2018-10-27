@@ -69,7 +69,7 @@
 
             <h2 class="entry-title"> {{ object.titulo }} </h2>
             <ul class="entry-meta clearfix">
-                <li><span class="post-author"><a href="#"><i class="fa fa-user"></i> {{ object.usuario.username }}</a></span></li>
+                <li><span class="post-author"><a href="{{object.get_aboslute_url_usuario_autor}}"><i class="fa fa-user"></i> {{ object.usuario.username }}</a></span></li>
                 <li><span class="post-date"><a href="#"><i class="fa fa-calendar"></i> {{object.fecha_alta}}</a></span></li>
                 <li><span class="post-comment"><a href="#"><i class="fa fa-tags"></i> Lifestyle</a></span></li>
             </ul>
@@ -159,7 +159,7 @@
                 <div class="media-body">
                     <div class="comment-info">
                         <div class="comment-author">
-                            <a href="#">{{ comentario.usuario }}</a>
+                            <a href="{{comentario.get_aboslute_url_usuario_autor}}">{{ comentario.usuario }}</a>
                             {% if user.id == comentario.usuario.id %}
                               <button id="button_eliminar" type="button" class="close" value="{{comentario.id}}" onclick="eliminar_comentario(this)">
                                 <span aria-hidden="true">&times;</span>

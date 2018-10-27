@@ -44,7 +44,7 @@
                 <a href="#"><img class="media-object" src="{% static 'assets/images/blog/avatar.jpg ' %}" alt=""></a>
               </div>
               <div class="media-body author-box-info">
-                <h3 class="media-heading"> {{publicacion.usuario}} <small>{{publicacion.fecha_alta}}</small></h3>
+                <h3 class="media-heading"> <a href="{{publicacion.get_aboslute_url_usuario_autor}}" style="color:#17202a ;">{{publicacion.usuario}} </a><small>{{publicacion.fecha_alta}}</small></h3>
                 <p>{{publicacion.cuerpo}}</p>
               </div> <!-- /.media-body -->
           </div> <!-- /.media -->
@@ -107,7 +107,7 @@
                               <div class="media-body">
                                   <div class="comment-info">
                                       <div class="comment-author">
-                                          <a href="#">{{ comentario.usuario }}</a>
+                                          <a href="{{comentario.get_aboslute_url_usuario_autor}}">{{ comentario.usuario }}</a>
                                           {% if user.id == comentario.usuario.id %}
                                             <button id="button_eliminar" type="button" class="close" value="" onclick="eliminar_comentario({{comentario.id}}, {{publicacion.id}})">
                                               <span aria-hidden="true">&times;</span>
@@ -220,11 +220,12 @@
 
   function denuncia_noticia(id){
       var comentario = $("#id_comentarioDenuncia" + id).val();
+      tipo = "publicacion"
 
       $.ajax({
       type: 'POST',
       url: '/home/noticia/denunciar/',
-      data: {id: id, comentario: comentario},
+      data: {id: id, comentario: comentario, tipo_denuncia: tipo},
       success: function (data) {
         $("#divGeneral").load(" #divGeneral");
         $("#id_comentarioDenuncia" + id).val("");
@@ -234,12 +235,8 @@
       error: function(data) {
       }
     });
-  };  
-
-
-  eliminar_publicacion
-
-    </script>
+  };
+  </script>
 
 
   {% endblock content %}

@@ -51,7 +51,7 @@
 
                 <tr>
                     <th scope="row"> <h3><a href="{{ publicacion.get_absolute_url }}">{{ publicacion.titulo }}</a></h3></th>
-                    <td><span class="post-author"><a href="#"><i class="fa fa-user">                
+                    <td><span class="post-author"><a href="{{publicacion.get_aboslute_url_usuario_autor}}"><i class="fa fa-user">                
                     </i> {{ publicacion.usuario.username }}</a></span></td>
                     <td style="text-align: center">5</td>  
                     <td>{{ publicacion.fecha_alta }}</td> 
