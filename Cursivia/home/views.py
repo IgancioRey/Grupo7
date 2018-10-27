@@ -149,23 +149,33 @@ class publicacionDetailForm(FormMixin,generic.DetailView):
             lista_meGusta_usuario.append(l.usuario.id)
 
         return lista_meGusta_usuario
-"""
+
 class PublicacionCreate(LoginRequiredMixin, CreateView):
     model = Publicacion
     fields = ['estado_publicacion']
+    
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Overridden so we can make sure the `Ipsum` instance exists
+        before going any further.
+        """
+        self.materia = get_object_or_404(Materia, pk=kwargs['pkM'])
+        return super().dispatch(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):        
+    def post(self, request, *args, **kwargs):  
+        print ('materia: ',self.materia)
         titulo = request.POST['titulo']
         cuerpo = request.POST['cuerpo']
         usuario = request.user
+        materia = self.materia
         tipo_publicacion =  'f'
         estado_publicacion = request.POST['estado_publicacion']
 
         try:
             image = request.FILES['image']
-            noticia = Publicacion(image = image, titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario )
+            noticia = Publicacion(image = image, titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario, materia = materia )
         except Exception as e:
-            noticia = Publicacion(titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario )
+            noticia = Publicacion(titulo= titulo, cuerpo= cuerpo, tipo_publicacion= tipo_publicacion, estado_publicacion= estado_publicacion, usuario= usuario, materia = materia )
             print (e)
 
         noticia.save()
@@ -182,7 +192,7 @@ class PublicacionCreate(LoginRequiredMixin, CreateView):
     def usuarioNoLogueado():
         login_url = '/accounts/login/'
         redirect_field_name = 'redirect_to'
-"""
+
 
 def registracion(request):
     if request.method=='POST':
@@ -268,7 +278,8 @@ class NoticiaCreate(LoginRequiredMixin, CreateView):
     model = Publicacion
     fields = ['estado_publicacion']
 
-    def post(self, request, *args, **kwargs):        
+    def post(self, request, *args, **kwargs):
+        print ('pasa por aca')        
         titulo = request.POST['titulo']
         cuerpo = request.POST['cuerpo']
         usuario = request.user

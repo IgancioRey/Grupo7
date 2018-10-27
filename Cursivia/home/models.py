@@ -118,6 +118,7 @@ class Publicacion(models.Model):
         """
         Devuelve el URL a una instancia particular de la publicacion
         """
+        print (self.tipo_publicacion )
         if self.tipo_publicacion == 'n':
             url = 'publicacion-detail'
         elif self.tipo_publicacion == 'f':

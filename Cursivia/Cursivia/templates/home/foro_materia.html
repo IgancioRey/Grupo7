@@ -20,35 +20,48 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-md-12">
-        <h2 class="entry-title">{{ object.descripcion }} </h2>
-        <div class="mt-30"></div>
+    <div class="row">
+        <div class="col-md-9">
+            <h2 class="entry-title">{{ object.descripcion }} </h2>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="col-md-3">
+            <div text-align="rigth">
+            <a href="{% url 'tema-create' object.id %}" class="btn btn-primary">Agregar publicacion</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- <div class="mt-30"></div> --> 
 
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>Tema</th>
-                <th>Usuario</th> 
-                <th>Comentarios</th>
-                <th>Fecha</th>
-            </tr>
-            </thead>
-            <tbody>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Tema</th>
+                    <th>Usuario</th> 
+                    <th>Comentarios</th>
+                    <th>Fecha</th>
+                </tr>
+                </thead>
+                <tbody>
 
-            {% for publicacion in view.publicaciones %}
+                {% for publicacion in view.publicaciones %}
 
-            <tr>
-                <th scope="row"> <h3><a href="{{ publicacion.get_absolute_url }}">{{ publicacion.titulo }}</a></h3></th>
-                <td><span class="post-author"><a href="#"><i class="fa fa-user">                
-                </i> {{ publicacion.usuario.username }}</a></span></td>
-                <td style="text-align: center">5</td>  
-                <td>{{ publicacion.fecha_alta }}</td> 
-            </tr>
-            
-            {% endfor %} 
+                <tr>
+                    <th scope="row"> <h3><a href="{{ publicacion.get_absolute_url }}">{{ publicacion.titulo }}</a></h3></th>
+                    <td><span class="post-author"><a href="#"><i class="fa fa-user">                
+                    </i> {{ publicacion.usuario.username }}</a></span></td>
+                    <td style="text-align: center">5</td>  
+                    <td>{{ publicacion.fecha_alta }}</td> 
+                </tr>
+                
+                {% endfor %} 
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div><!-- /.row --> 
 
