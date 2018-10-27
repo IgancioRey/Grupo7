@@ -102,7 +102,7 @@ class Publicacion(models.Model):
     aprovacion = models.IntegerField(null=True, blank=True, default=0)
     denuncias = models.IntegerField(null=True, blank=True, default=0)
     image = models.ImageField(upload_to='images/', null=True, blank=True, default='#')
-    #grupo = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True, default='')
+    grupo = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True, default='')
 
     def __str__(self):
         return self.titulo
@@ -119,6 +119,7 @@ class Publicacion(models.Model):
         """
         Devuelve el URL a una instancia particular de la publicacion
         """
+        print (self.tipo_publicacion )
         if self.tipo_publicacion == 'n':
             url = 'publicacion-detail'
         elif self.tipo_publicacion == 'f':
@@ -194,7 +195,7 @@ class MeGusta(models.Model):
 """
 GRUPOS
 """
-"""
+
 MIN_GROUPNAME_LENGTH = 5
 
 class GroupError(Exception):
@@ -292,4 +293,3 @@ def _change_group_cb(sender, instance, created, **kwargs):
         instance.properties = props
 
 post_save.connect(_change_group_cb, sender=Group)
-"""
