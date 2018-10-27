@@ -32,6 +32,7 @@ urlpatterns = [
     #url(r'^grupo/list/$', views.gruposList, name='groups_list'),
     #url(r'^grupo/([a-zA-Z0-9_-]+)/$', show, name='groups_detail'),
     #url(r'^foroGrupo/([a-zA-Z0-9_-]+)/$', views.foroGrupo, name ='foro_grupo'), 
+    url(r'^perfil/(?P<pk>\d+)$', views.PerfilUsuario, name ='perfil_usuario'),
 
 
     #url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail'),

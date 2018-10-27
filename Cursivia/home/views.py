@@ -200,7 +200,7 @@ def registracion(request):
                   
                     N               = 20
                     token           = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(N))
-                    usuario         = Usuario(usuario = user, tokenActivacion = token)
+                    usuario         = Usuario(usuario = user, tokenActivacion = token, nombre = nombre, apellido= apellido, eMail=email)
 
                     email_subject   = 'Bienvenido a Cursivia - Activación de usuario'
                     email_body      = " Hola %s, se ha registrado una cuenta con el correo %s. Para activarla has clic en el siguiente link: https://cursivia.herokuapp.com/home/bienvenido/%s " % (nombre, email, token)
@@ -225,7 +225,9 @@ def registracion(request):
 def bienvenido(request, tokenActivacion):
     usuario  = get_object_or_404(Usuario, tokenActivacion = tokenActivacion )    
     user            = usuario.usuario
+    usuario.estado = 'a'
     user.is_active  = True
+    usuario.save()
     user.save()
     return render(
         request, 
@@ -703,3 +705,18 @@ def foroGrupo(request,group_name):
 
 
 """
+def PerfilUsuario(request, pk):
+    user = User.objects.get(id__exact=pk)
+    usuario = Usuario.objects.get(usuario=user)
+    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n', usuario__exact=user)
+    lista_publicaciones = Publicacion.objects.all().filter(tipo_publicacion__exact='p', usuario__exact=user)
+    lista_denuncia = Publicacion.objects.all().filter(usuario__exact=user, tipo_publicacion='d')
+
+    lista_carreras = Carrera.objects.all() 
+    materiasC =[]
+    for l in lista_carreras: 
+        materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+
+
+    return render(request,'home/perfil_usuario.html', {'materiasC':materiasC, 'usuario':usuario, 'cantidad_noticias':lista_noticias.count(), 'cantidad_publicaciones': lista_publicaciones.count(),'cantidad_denuncia': lista_denuncia.count()})
+

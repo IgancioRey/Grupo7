@@ -50,6 +50,7 @@ class Usuario(models.Model):
 
     nombre = models.CharField(max_length=50, null=False, blank=False, default='')
     apellido = models.CharField(max_length=50, null=False, blank=False, default='')
+    descripcion = models.CharField(max_length=200, null=True, blank=True, default='')
     eMail = models.EmailField()
     usuario = models.OneToOneField(User,on_delete = models.CASCADE, null=True, blank=True)
     fechaNacimiento = models.DateField(null=True, blank=True)
@@ -133,6 +134,10 @@ class Publicacion(models.Model):
 
     def __unicode__(self,):
         return str(self.image)
+
+    def get_aboslute_url_usuario_autor(self):
+        return reverse ('perfil_usuario', args=[str(self.usuario.id)])
+
 
 
 class Comentario(models.Model):
