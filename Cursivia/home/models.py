@@ -273,8 +273,6 @@ class GroupInvitation(models.Model):
 
 _group_name_re = re.compile(r'^[a-zA-Z]([a-zA-Z0-9-]*)$')
 def create_usergroup(user, name):
-    if not _group_name_re.match(name):
-        raise GroupError(_('Nombre invalido'))
 
     if len(name) < 5:
         err_msg = ('El nombre del grupo debe tener 5 caracteres como mínimo')

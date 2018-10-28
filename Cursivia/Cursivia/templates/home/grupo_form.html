@@ -22,13 +22,20 @@
 
 {% block content %}
 
+<div align="center" margin-top= "5px">
+  {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+  {% endif %}
+</div>
 
 <form method="post" action="">
     {% csrf_token %}
     <label for="group_name">{% trans "Nombre del grupo" %}</label>
     <input type="text" value="{{ group_name }}" class="form-control" name="group_name">
-    <div class="help-block">{% trans 'Solamente se permiten letras, números, "." y "-". Debe empezar con una letra' %} 
-    </div>
     <button class="btn btn-primary">{% trans "Crear Grupo" %}</button>
 </form>
 

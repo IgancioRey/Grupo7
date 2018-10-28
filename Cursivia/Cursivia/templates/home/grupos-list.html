@@ -35,7 +35,7 @@
             {% for grupo in grupos %}
 
             <tr>
-                <th scope="row"> <h3><a href="{% url 'foro_grupo' grupo.name %}">{{ grupo.name }}</a></h3></th> 
+                <th scope="row"> <h3><a href="{% url 'foro_grupo' grupo.id %}">{{ grupo.name }}</a></h3></th> 
             </tr>
             
             {% endfor %} 

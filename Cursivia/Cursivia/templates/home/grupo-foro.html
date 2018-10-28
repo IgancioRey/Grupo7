@@ -22,7 +22,7 @@
 
   {% block content %}
   <body>
-    <h1>Foro de {{ group_name }}</h1>
+    <h1>Foro de {{ group.name }}</h1>
     <p></p> 
 
     <div class="form-group">
@@ -30,7 +30,7 @@
       <textarea name="cuerpo" class="form-control" id="id_cuerpo" placeholder="Ingrese el comentario" type="text" rows="4"></textarea>
     </div>
     <div align="center">
-      <button class="btn btn-primary" type="submit" name="action" style="margin-bottom: 50px;" onclick="publicacion_foro({{ group_name }})">Crear comentario
+      <button class="btn btn-primary" type="submit" name="action" style="margin-bottom: 50px;" onclick="publicacion_foro({{ group.id }})">Crear comentarios
       <i class="mdi-content-send right"></i>
       </button> 
    </div>
@@ -153,14 +153,15 @@
     <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
     <script>
 
-    function publicacion_foro(){
+    function publicacion_foro(id){
+      console.log(id)
       var cuerpo = $("#id_cuerpo").val();
-      console.log(group_name)
       $.ajax({
         type: 'POST',
-        url: '/foroGrupo/'+group_name,
+        url: '/home/foroGrupo/'+ id,
         data: {cuerpo: cuerpo},
         success: function (data) {
+          $("#divGeneral").load(" #divGeneral");
           $("#divPublicacion").load(" #divPublicacion");
           $("#id_cuerpo").val("");
         },

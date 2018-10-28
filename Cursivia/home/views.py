@@ -666,7 +666,7 @@ def grupoCreate(request):
             messages.success(request, msg) 
             return redirect('groups_list')
         except GroupError as e:
-            error = e.message
+            messages.error(request, e.message)
 
     lista_carreras = Carrera.objects.all() 
     materiasC =[]
@@ -691,13 +691,12 @@ def gruposList(request):
 
 
 @csrf_exempt
-def foroGrupo(request,group_name):
-    group= get_object_or_404(Group, name = group_name)  
+def foroGrupo(request,pk):
+    group= get_object_or_404(Group, id = pk)  
     if request.method=='POST':
-
         cuerpo = request.POST['cuerpo']
         usuario = request.user
-        grupo = group_name
+        grupo = group
         fecha_alta = timezone.now()
         estado_publicacion = 'p'
         tipo_publicacion = 'g'
@@ -728,7 +727,7 @@ def foroGrupo(request,group_name):
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
 
-    return render(request, 'home/grupo-foro.html', {'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group_name': group_name})
+    return render(request, 'home/grupo-foro.html', {'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group': group})
 
 
 
