@@ -163,7 +163,6 @@ class PublicacionCreate(LoginRequiredMixin, CreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):  
-        print ('materia: ',self.materia)
         titulo = request.POST['titulo']
         cuerpo = request.POST['cuerpo']
         usuario = request.user
@@ -664,9 +663,8 @@ def grupoCreate(request):
         try:
             create_usergroup(request.user, group_name)
             msg = ('Se ha creado el grupo "{0}".').format(group_name)
-            messages.success(request, msg)
-            #return redirect('groups_show', group_name)
-            return redirect('/')
+            messages.success(request, msg) 
+            return redirect('groups_list')
         except GroupError as e:
             error = e.message
 
@@ -695,7 +693,6 @@ def gruposList(request):
 @csrf_exempt
 def foroGrupo(request,group_name):
     group= get_object_or_404(Group, name = group_name)  
-    print('Grupo:',group.id) 
     if request.method=='POST':
 
         cuerpo = request.POST['cuerpo']
