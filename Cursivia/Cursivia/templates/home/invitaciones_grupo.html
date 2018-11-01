@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+
+  {% load static %} 
+  {% block imagen_presentacion %}
+  {% endblock %}
+
+  {% block sidebar %}
+    <div class="sidebar-wrapper">
+        <aside class="widget widget_categories">
+          <h2 class="widget-title">Foro Carreras</h2>  
+            <ul>
+              {% for carrera,materia in lista_cantMaterias %}
+                  <li><a href="{% url 'foro_carrera' carrera.id %}"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }}</span></a></li>
+              {% endfor %}      
+            </ul>
+        </aside>
+
+    </div>
+  {% endblock sidebar %} 
+
+
+  {% block content %}
+    <div id="id_invitaciones">
+      {% for invitacion in lista_invitacion %}
+          <div class="cta-v2">
+            <div>
+              <h2>Has sido invitado a participar en el Grupo {{invitacion.group.name}}</h2>
+              <p>{{invitacion.invited_by.username}} quiere que te unas a su grupo</p>
+              <p></p>
+            </div>
+              <footer class="entry-footer clearfix">
+                <div id="divIdBrra">
+                  <ul class="entry-meta pull-right">
+                      <li><a onclick="agregar_miembro({{invitacion.group.id}})" class="flaticon-check64"><span class="like"> &nbsp; Aceptar Invitacion</span></a></li>
+                      <li><span class="share"><a class="flaticon-cancel22"> &nbsp; Rechazar Invitacion </a></span></li>
+                      <li><span class="post-comments"><a data-toggle="modal" data-target="#ModalConfirmarDenuncia"><i class="fa fa-delete"></i> Denunciar</a></span></li>
+                  </ul>
+                </div>
+              </footer>
+          </div><!-- /.cta-v2 -->
+          <p></p>
+        {% endfor %}
+        {% if lista_invitacion.count == 0 %}
+        <p> No tenes invitaciones, nadie te  quiere.</p>
+        {% endif%}
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+     <script>
+        function agregar_miembro(idG){
+            $.ajax({
+              type: 'POST',
+              url: '/home/foroGrupo/invitacion/',
+              data: {idGroup: idG},
+              success: function (data) {
+                $("#id_invitaciones").load(" #id_invitaciones")
+              },
+              error: function(data) {
+              }
+            });
+          };
+      </script>
+
+  {% endblock %}
+
+

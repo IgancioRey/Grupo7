@@ -258,7 +258,7 @@
       function agregar_usuario(idG, idU){
           $.ajax({
             type: 'POST',
-            url: '/home/foroGrupo/invitacion/',
+            url: '/home/foroGrupo/enviarInvitacion/',
             data: {idGroup: idG, idUser: idU},
             success: function (data) {
               $("#divGeneral").load(" #divGeneral");

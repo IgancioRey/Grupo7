@@ -83,8 +83,8 @@
                             <ul class="dropdown-menu" role="menu">
                               <li><a class="flaticon-symbol14" href="{% url 'groups_create' %}"> &nbsp; Crear Grupo</a></li>
                               <li><a class="flaticon-speechbubble46" href="{% url 'groups_list' %}"> &nbsp; Mis Grupos</a></li>
+                              <li><a class="flaticon-email14" href="{% url 'invitacion' pk=user.id %}"> &nbsp; Invitaciones a Grupos</a></li>
                             </ul>
-                        
                       </li>  
                     </li>
                   {% endif %}
