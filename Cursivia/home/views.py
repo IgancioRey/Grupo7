@@ -659,6 +659,7 @@ def grupoCreate(request):
     error = None
     group_name = ''
     if request.method == 'POST':
+        print(request.POST)
         group_name = request.POST.get('group_name', '')
         try:
             create_usergroup(request.user, group_name)
@@ -672,9 +673,10 @@ def grupoCreate(request):
     materiasC =[]
     for l in lista_carreras: 
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+
     return render(request, 'home/grupo_form.html', { 
         'group_name': group_name,
-        'lista_cantMaterias': materiasC
+        'lista_cantMaterias': materiasC,
     })
 
     return redirect('/')
@@ -726,10 +728,28 @@ def foroGrupo(request,pk):
     for l in lista_carreras:
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
+    usuarios_no_miembro =[]
+    usuarios_miembro= group.user_set.all()
+    lista_usuarios = Usuario.objects.all()
+    for usuario in lista_usuarios:
+        if (usuario.usuario not in usuarios_miembro):
+            usuarios_no_miembro.append(usuario)
+            
+    return render(request, 'home/grupo-foro.html', {'lista_usuarios' : usuarios_no_miembro, 'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group': group})
 
-    return render(request, 'home/grupo-foro.html', {'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group': group})
 
+@csrf_exempt
+def invitacionGrupo(request):
 
+    if request.method=='POST':
+        grupo = get_object_or_404(Group, id = request.POST['idGroup'] )  
+        usuario = get_object_or_404(Usuario, id = request.POST['idUser'] ) 
+       
+        grupo.user_set.add(usuario.usuario)
+
+        grupo.save()
+
+    return render(request, 'home/grupo-foro.html')
 
 def PerfilUsuario(request, pk):
     user = User.objects.get(id__exact=pk)

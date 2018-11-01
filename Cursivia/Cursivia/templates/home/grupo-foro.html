@@ -22,8 +22,69 @@
 
   {% block content %}
   <body>
-    <h1>Foro de {{ group.name }}</h1>
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Foro de {{ group.name }}</h1>
+      </div>
+      <div class="col-md-4" align="right">
+        <P></P>
+        <a class="flaticon-symbol14" data-toggle="modal" data-target="#ModalUsuarios"> &nbsp; Agregar Miembro</a>
+      </div>
+
     <p></p> 
+
+    <!-- /.modal -->
+    <div class="modal fade" id="ModalUsuarios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title" id="exampleModalLabel">Usuarios a los que deseas invitar</h3>
+          </div>
+          <div class="modal-body">
+            
+            <div class="row "> 
+              <div class="col-sm-5  ">
+                <h3>Total de usuarios</h3>
+                <div class="selector-available"> 
+                  <select name="permissions_old" class="filtered form-control" id="id_permissions_from" multiple="" data-is-stacked="0" data-field-name="permissions">
+                    {% for usuario in lista_usuarios %}
+                      {% if user.id != usuario.id %}
+                        <option id="{{usuario.id}}" value="{{usuario.id}}" title="{{usuario.usuario.username}}">{{usuario.usuario.username}}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-sm-2 text-center">
+                <a class="flaticon-left-arrow5" onclick="mover_fuera()"></a>
+                <a class="flaticon-right-arrow6" onclick="mover_dentro()"></a>
+              </div>
+
+              <div class="col-sm-5">
+                <h3>Invitar a</h3>
+
+                 <div class="selector-chosen">
+                    <select id="id_permissions_to" multiple="multiple" size="0" name="permissions" class="filtered form-control" >
+                    </select>
+                  </div>
+
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            <button type="submit" name="action" class="btn btn-success" data-dismiss="modal" onclick="invitar_grupo({{ group.id }})">Agregar Usuarios</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- /.modal -->
 
     <div class="form-group">
       <label class="sr-only" for="cuerpo">Cuerpo</label>
@@ -33,6 +94,8 @@
       <button class="btn btn-primary" type="submit" name="action" style="margin-bottom: 50px;" onclick="publicacion_foro({{ group.id }})">Crear comentarios
       <i class="mdi-content-send right"></i>
       </button> 
+      <p></p>
+      
    </div>
 
     <div id="divGeneral">
@@ -152,6 +215,62 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
     <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
     <script>
+      function mover_dentro(){    
+        var lista_usuario = $("#id_permissions_from option:selected");
+        var lista_usuariono = $("#id_permissions_from option:not(:selected)");
+
+        $.each(lista_usuario, function(id, option, title) {
+          $("#id_permissions_to").append('<option id='+option.id+' value='+option.id+' title='+option.title+'>'+option.title+'</option>');
+
+          $("#id_permissions_to2").append('<option id='+option.id+' value='+option.id+' title='+option.title+'>'+option.title+'</option>');
+        });
+        $("#id_permissions_from").empty();
+        $.each(lista_usuariono, function(id, option, title) {
+          $("#id_permissions_from").append('<option id='+option.id+' value='+option.id+' title='+option.title+'>'+option.title+'</option>');
+        });
+      };
+    </script>
+    <script>
+      function mover_fuera(){
+        var lista_usuario = $("#id_permissions_to option:selected");
+        var lista_usuariono = $("#id_permissions_to option:not(:selected)");
+
+        $.each(lista_usuario, function(id, option, title) {
+          $("#id_permissions_from").append('<option id='+option.id+' value='+option.id+' title='+option.title+'>'+option.title+'</option>');
+        });
+        $("#id_permissions_to").empty();
+        $.each(lista_usuariono, function(id, option, title) {
+          $("#id_permissions_to").append('<option id='+option.id+' value='+option.id+' title='+option.title+'>'+option.title+'</option>');
+        });
+      };
+    </script>
+
+    <script>
+      function invitar_grupo(idG){
+        var lista_usuario = $("#id_permissions_to option");
+        $.each(lista_usuario, function(id, option) {
+            agregar_usuario(idG, option.id);
+        });
+      };
+    </script>
+
+    <script>
+      function agregar_usuario(idG, idU){
+          $.ajax({
+            type: 'POST',
+            url: '/home/foroGrupo/invitacion/',
+            data: {idGroup: idG, idUser: idU},
+            success: function (data) {
+              $("#divGeneral").load(" #divGeneral");
+              $("#id_permissions_to").empty();
+            },
+            error: function(data) {
+            }
+          });
+        };
+    </script>
+
+    <script>
 
     function publicacion_foro(id){
       console.log(id)
@@ -236,11 +355,9 @@
       }
     });
   };  
+</script>
 
 
-  eliminar_publicacion
-
-    </script>
 
 
   {% endblock content %}

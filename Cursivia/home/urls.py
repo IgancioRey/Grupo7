@@ -34,6 +34,7 @@ urlpatterns = [
     #url(r'^foroGrupo/([a-zA-Z0-9_-]+)/$', views.foroGrupo, name ='foro_grupo'), 
     url(r'^perfil/(?P<pk>\d+)$', views.PerfilUsuario, name ='perfil_usuario'),
     url(r'^foroGrupo/(?P<pk>\d+)$', views.foroGrupo, name ='foro_grupo'), 
+    url(r'^foroGrupo/invitacion/$', views.invitacionGrupo, name ='invitacion_grupo'), 
 
 
 
