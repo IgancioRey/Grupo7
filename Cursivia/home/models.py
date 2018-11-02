@@ -179,6 +179,7 @@ class Denuncia(models.Model):
     fecha_baja = models.DateTimeField(null=True, blank=True)
     motivo_baja = models.CharField(max_length=200, null=True, blank=True)
     usuarioDenunciado = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
+    grupoDenunciado = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
 
    
     def __str__(self):
@@ -297,3 +298,18 @@ def _change_group_cb(sender, instance, created, **kwargs):
         instance.properties = props
 
 post_save.connect(_change_group_cb, sender=Group)
+
+class Estado_Grupo(models.Model):
+    estadosCargados = (
+        ('p', 'Publicado'),
+        ('b', 'Borrador'),
+        ('d', 'Denunciado'),
+        ('e', 'Eliminado'),
+    )
+
+    grupo = models.ForeignKey(Group, on_delete=models.CASCADE)
+    estado = models.CharField(max_length=1, choices=estadosCargados, blank=True, default='b',
+        help_text='situacion actual de la publicacion')
+
+    def __str__(self):
+        return self.estado

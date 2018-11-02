@@ -493,8 +493,6 @@ def DenunciarNoticia(request):
                 denuncia.save()
 
         else:
-            print("ENTRA!")        
-
             usuarioDenunciado = get_object_or_404(Usuario, id = request.POST['id'] )
 
             cantidad_denuncias = Denuncia.objects.all().filter(usuarioDenunciado= usuarioDenunciado).count()
@@ -659,10 +657,12 @@ def grupoCreate(request):
     error = None
     group_name = ''
     if request.method == 'POST':
-        print(request.POST)
         group_name = request.POST.get('group_name', '')
         try:
-            create_usergroup(request.user, group_name)
+            grupo = create_usergroup(request.user, group_name)
+            estado = Estado_Grupo(grupo= grupo, estado= 'p')
+            estado.save()
+
             msg = ('Se ha creado el grupo "{0}".').format(group_name)
             messages.success(request, msg) 
             return redirect('groups_list')
@@ -685,11 +685,21 @@ def grupoCreate(request):
 @login_required
 def gruposList(request):
     groups = request.user.groups.order_by('name').all()
+
     lista_carreras = Carrera.objects.all() 
     materiasC =[]
     for l in lista_carreras: 
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
-    return render(request, 'home/grupos-list.html', {'grupos': groups,'lista_cantMaterias': materiasC})
+
+    grupos_publicados = []
+    for grupoTotales in groups:
+        propiedad_extra = Estado_Grupo.objects.get(grupo= grupoTotales)
+
+        if (propiedad_extra.estado == 'p'):
+            grupos_publicados.append(propiedad_extra.grupo)
+
+
+    return render(request, 'home/grupos-list.html', {'grupos': grupos_publicados,'lista_cantMaterias': materiasC})
 
 
 @csrf_exempt
@@ -792,3 +802,28 @@ def invitacion (request, pk):
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
     return render(request,'home/invitaciones_grupo.html', {'materiasC':materiasC, 'lista_invitacion': lista_invitacion})
+
+@csrf_exempt
+def denunciarGrupo (request):
+    if request.method=='POST':      
+
+        comentario = request.POST['comentario']
+        usuario = request.user
+        fecha_alta = timezone.now()
+        grupo = get_object_or_404(Group, id = request.POST['idGroup'] )
+
+        cantidad_denuncias = Denuncia.objects.all().filter(grupoDenunciado= grupo).count()
+        propiedad_extra = Estado_Grupo.objects.get(grupo= grupo)
+        if  (cantidad_denuncias >= 3):
+                propiedad_extra.estado= 'd'
+                propiedad_extra.save() 
+            
+        if (comentario == ''):
+            print("Tendriamos que tirar mensaje")        
+        else:
+            denuncia = Denuncia(grupoDenunciado= grupo, comentario= comentario, usuario= usuario, fecha_alta= fecha_alta)
+            denuncia.save()
+
+        
+    return render(request, 'home/publicacion_detail.html')
+   
