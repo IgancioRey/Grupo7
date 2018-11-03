@@ -701,6 +701,7 @@ def gruposList(request):
 
     return render(request, 'home/grupos-list.html', {'grupos': grupos_publicados,'lista_cantMaterias': materiasC})
 
+@csrf_exempt
 @login_required 
 def foroGrupo(request,pk):
     group= get_object_or_404(Group, id = pk)  
