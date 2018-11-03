@@ -785,7 +785,7 @@ def enviarInvitacionGrupo (request):
         invitacion.save()
 
         email_subject   = 'Cursivia - Invitación a grupo'
-        email_body      = " Hola %s, ha sido invitado a formar parte del grupo %s. Para aceptar la invitación has clic en el siguiente link: http://127.0.0.1:8000/home/invitacion/%s " % (usuario.nombre, grupo.name , usuario.usuario.id)
+        email_body      = " Hola %s, ha sido invitado a formar parte del grupo %s. Para aceptar la invitación has clic en el siguiente link: https://cursivia.herokuapp.com/home/invitacion/%s " % (usuario.nombre, grupo.name , usuario.usuario.id)
         
         send_mail(email_subject,email_body, 'cursiviaweb@gmail.com',[usuario.eMail] )
         
