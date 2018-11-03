@@ -33,7 +33,7 @@
                 <div id="divIdBrra">
                   <ul class="entry-meta pull-right">
                       <li><a onclick="agregar_miembro({{invitacion.group.id}})" class="flaticon-check64"><span class="like"> &nbsp; Aceptar Invitacion</span></a></li>
-                      <li><span class="share"><a class="flaticon-cancel22"> &nbsp; Rechazar Invitacion </a></span></li>
+                      <li><span class="share"><a onclick="cancelar_invitacion({{invitacion.group.id}})" class="flaticon-cancel22"> &nbsp; Rechazar Invitacion </a></span></li>
                       <li><span class="post-comments"><a data-toggle="modal" data-target="#ModalConfirmarDenuncia"><i class="fa fa-delete"></i> Denunciar</a></span></li>
                   </ul>
                 </div>
@@ -74,7 +74,21 @@
             $.ajax({
               type: 'POST',
               url: '/home/foroGrupo/invitacion/',
-              data: {idGroup: idG},
+              data: {idGroup: idG, idAction: 1},
+              success: function (data) {
+                $("#id_invitaciones").load(" #id_invitaciones")
+              },
+              error: function(data) {
+              }
+            });
+          };
+    </script>
+    <script>
+        function cancelar_invitacion(idG){
+            $.ajax({
+              type: 'POST',
+              url: '/home/foroGrupo/invitacion/',
+              data: {idGroup: idG, idAction: 2},
               success: function (data) {
                 $("#id_invitaciones").load(" #id_invitaciones")
               },
