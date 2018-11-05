@@ -660,7 +660,7 @@ def grupoCreate(request):
         group_name = request.POST.get('group_name', '')
         try:
             grupo = create_usergroup(request.user, group_name)
-            estado = Estado_Grupo(grupo= grupo, estado= 'p')
+            estado = Estado_Grupo(grupo= grupo, estado= 'p', admin=request.user)
             estado.save()
 
             msg = ('Se ha creado el grupo "{0}".').format(group_name)
@@ -744,14 +744,19 @@ def foroGrupo(request,pk):
 
     usuarios_no_miembro =[]
 
-
+    estado = Estado_Grupo.objects.get(grupo= group)
+    usuario_no_admin = []
     usuarios_miembro= group.user_set.all()
+    for usuarioM in usuarios_miembro:
+        if (usuarioM != estado.admin):
+            usuario_no_admin.append(usuarioM)
+
     lista_usuarios = Usuario.objects.all()
     for usuario in lista_usuarios:
         if (usuario.usuario not in usuarios_miembro):
             usuarios_no_miembro.append(usuario)
 
-    return render(request, 'home/grupo-foro.html', {'lista_usuarios' : usuarios_no_miembro, 'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group': group})
+    return render(request, 'home/grupo-foro.html', {'usuarios_no_admin':usuario_no_admin,'lista_usuarios_miembros': usuarios_miembro, 'lista_usuarios' : usuarios_no_miembro, 'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group': group})
 
 @login_required
 @csrf_exempt
@@ -847,4 +852,17 @@ def denunciarGrupo (request):
 
         
     return render(request, 'home/publicacion_detail.html')
+
+@csrf_exempt
+def designarAdministrador (request):
+    grupo = get_object_or_404(Group, id = request.POST['idGroup'] )
+    usuario = get_object_or_404(User, id = request.POST['idUser'] )
+    estado = Estado_Grupo.objects.get(grupo= grupo)
+    estado.admin = usuario
+    estado.save()
+
+
+    return render(request, 'home/publicacion_detail.html')
+
+
    

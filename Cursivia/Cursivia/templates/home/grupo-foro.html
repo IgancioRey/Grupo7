@@ -1,3 +1,5 @@
+Nota desde 2018-11-05 11:28:06.060
+
 {% extends "base.html" %}
 
 
@@ -28,7 +30,7 @@
       </div>
       <div class="col-md-4" align="right">
         <p> <a class="flaticon-symbol14" data-toggle="modal" data-target="#ModalUsuarios"> &nbsp; Agregar Miembro</a><p>
-        <p><a class="flaticon-worker22" data-toggle="modal" data-target="#ModalUsuarios"> &nbsp; Designar administrador</a></p>
+        <p><a class="flaticon-worker22" data-toggle="modal" data-target="#ModalAdministradores"> &nbsp; Designar administrador</a></p>
         
       </div>
 
@@ -48,7 +50,7 @@
             
             <div class="row "> 
               <div class="col-sm-5  ">
-                <h3>Total de usuarios</h3>
+                <h4>Total de usuarios</h4>
                 <div class="selector-available"> 
                   <select name="permissions_old" class="filtered form-control" id="id_permissions_from" multiple="" data-is-stacked="0" data-field-name="permissions">
                     {% for usuario in lista_usuarios %}
@@ -66,7 +68,7 @@
               </div>
 
               <div class="col-sm-5">
-                <h3>Invitar a</h3>
+                <h4>Invitar a</h4>
 
                  <div class="selector-chosen">
                     <select id="id_permissions_to" multiple="multiple" size="0" name="permissions" class="filtered form-control" >
@@ -80,6 +82,35 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
             <button type="submit" name="action" class="btn btn-success" data-dismiss="modal" onclick="invitar_grupo({{ group.id }})">Agregar Usuarios</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.modal -->
+    
+    <!-- /.modal -->
+    <div class="modal fade" id="ModalAdministradores" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title" id="exampleModalLabel">Usuario al que deseas designar como administrador</h3>
+          </div>
+          <div id="id_div_admin" class="modal-body">
+            <h4>Total de miembros</h4>
+            <div class="selector-available"> 
+              <select name="tabla_miembros" class="filtered form-control" id="id_tabla_miembros"  data-is-stacked="0" data-field-name="permissions" style="padding-bottom: 10px;padding-top: 10px;">
+                {% for usuarioM in usuarios_no_admin %}
+                  <option id="{{usuarioM.id}}" value="{{usuarioM.id}}" title="{{usuarioM.username}}">{{usuarioM.username}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            <button type="submit" name="action" class="btn btn-success" data-dismiss="modal" onclick="designar_administrador({{ group.id }})">Agregar Usuarios</button>
           </div>
         </div>
       </div>
@@ -216,14 +247,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
     <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
     <script>
-      function mover_dentro(){    
-        var lista_usuario = $("#id_permissions_from option:selected");
+      function mover_dentro(){
+          var lista_usuario = $("#id_permissions_from option:selected");
         var lista_usuariono = $("#id_permissions_from option:not(:selected)");
 
         $.each(lista_usuario, function(id, option, title) {
           $("#id_permissions_to").append('<option id='+option.id+' value='+option.id+' title='+option.title+'>'+option.title+'</option>');
-
-          $("#id_permissions_to2").append('<option id='+option.id+' value='+option.id+' title='+option.title+'>'+option.title+'</option>');
         });
         $("#id_permissions_from").empty();
         $.each(lista_usuariono, function(id, option, title) {
@@ -244,6 +273,23 @@
           $("#id_permissions_to").append('<option id='+option.id+' value='+option.id+' title='+option.title+'>'+option.title+'</option>');
         });
       };
+    </script>
+    <script>
+      function designar_administrador(idG){
+         var lista_usuario = $("#id_tabla_miembros option:selected");
+        $.each(lista_usuario, function(id, option) {
+            $.ajax({
+            type: 'POST',
+            url: '/home/foroGrupo/designarAdministrador/',
+            data: {idGroup: idG, idUser: option.id},
+            success: function (data) {
+              $("#id_div_admin").load(" #id_div_admin");
+            },
+            error: function(data) {
+            }
+          });
+        });
+      }
     </script>
 
     <script>

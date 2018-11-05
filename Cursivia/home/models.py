@@ -308,6 +308,7 @@ class Estado_Grupo(models.Model):
     )
 
     grupo = models.ForeignKey(Group, on_delete=models.CASCADE)
+    admin = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)
     estado = models.CharField(max_length=1, choices=estadosCargados, blank=True, default='b',
         help_text='situacion actual de la publicacion')
 

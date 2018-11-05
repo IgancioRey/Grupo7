@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^invitacion/(?P<pk>\d+)$', views.invitacion, name ='invitacion'), 
     url(r'^foroGrupo/enviarInvitacion/$', views.enviarInvitacionGrupo, name ='enviar_invitacion_grupo'), 
     url(r'^foroGrupo/denunciar/$', views.denunciarGrupo, name ='denunciar_grupo'), 
+    url(r'^foroGrupo/designarAdministrador/$', views.designarAdministrador, name ='designar_administrador'), 
 
 
 
