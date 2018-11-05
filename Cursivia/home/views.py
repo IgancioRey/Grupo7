@@ -701,10 +701,14 @@ def gruposList(request):
 
     return render(request, 'home/grupos-list.html', {'grupos': grupos_publicados,'lista_cantMaterias': materiasC})
 
-
 @csrf_exempt
+@login_required 
 def foroGrupo(request,pk):
     group= get_object_or_404(Group, id = pk)  
+    GProxy = GroupProxy(group)
+    if not (GProxy.is_member(request.user)):
+        return redirect('groups_list')
+
     if request.method=='POST':
         cuerpo = request.POST['cuerpo']
         usuario = request.user
@@ -739,6 +743,8 @@ def foroGrupo(request,pk):
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
     usuarios_no_miembro =[]
+
+
     usuarios_miembro= group.user_set.all()
     lista_usuarios = Usuario.objects.all()
     for usuario in lista_usuarios:
@@ -747,23 +753,27 @@ def foroGrupo(request,pk):
 
     return render(request, 'home/grupo-foro.html', {'lista_usuarios' : usuarios_no_miembro, 'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group': group})
 
-
+@login_required
 @csrf_exempt
 def invitacionGrupo(request):
 
     if request.method=='POST':
         grupo = get_object_or_404(Group, id = request.POST['idGroup'] )
         usuario = Usuario.objects.get(usuario=request.user)
-       
+        """       
         grupo.user_set.add(usuario.usuario)
         grupo.save()
-
+        """
         invitacion = GroupInvitation.objects.get(group= grupo, invitee= usuario.usuario)
-        print(invitacion)
-        invitacion.delete()
+        if int(request.POST['idAction'])  == 1:        
+            invitacion.accept()
+        else:
+            invitacion.refuse()
+        #invitacion.delete()
 
     return render(request, 'home/grupo-foro.html')
 
+@login_required
 @csrf_exempt
 def enviarInvitacionGrupo (request):
     if request.method=='POST':
@@ -772,8 +782,13 @@ def enviarInvitacionGrupo (request):
         usuario = get_object_or_404(Usuario, id=request.POST['idUser'])
         usuarioMiembro = get_object_or_404(User, id=request.user.id)
 
-        invitacion = GroupInvitation(date_invited= datetime.date.today(), group= grupo, invitee= usuario.usuario, invited_by= usuarioMiembro)
+        invitacion = GroupInvitation(group= grupo, invitee= usuario.usuario, invited_by= usuarioMiembro)        
         invitacion.save()
+
+        email_subject   = 'Cursivia - Invitación a grupo'
+        email_body      = " Hola %s, ha sido invitado a formar parte del grupo %s. Para aceptar la invitación has clic en el siguiente link: https://cursivia.herokuapp.com/home/invitacion/%s " % (usuario.nombre, grupo.name , usuario.usuario.id)
+        
+        send_mail(email_subject,email_body, 'cursiviaweb@gmail.com',[usuario.eMail] )
         
         return render(request, 'home/grupo-foro.html')
 
@@ -794,6 +809,10 @@ def PerfilUsuario(request, pk):
     return render(request,'home/perfil_usuario.html', {'materiasC':materiasC, 'usuario':usuario, 'cantidad_noticias':lista_noticias.count(), 'cantidad_publicaciones': lista_publicaciones.count(),'cantidad_denuncia': lista_denuncia.count()})
 
 def invitacion (request, pk):
+
+    if not (int(pk)==int(request.user.id)):
+        return redirect('invitacion', request.user.id)
+
     user = User.objects.get(id__exact=pk)
     lista_invitacion = GroupInvitation.objects.all().filter(invitee = user)
     lista_carreras = Carrera.objects.all() 
@@ -801,7 +820,9 @@ def invitacion (request, pk):
     for l in lista_carreras: 
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
-    return render(request,'home/invitaciones_grupo.html', {'materiasC':materiasC, 'lista_invitacion': lista_invitacion})
+
+
+    return render(request,'home/invitaciones_grupo.html', {'lista_cantMaterias':materiasC, 'lista_invitacion': lista_invitacion})
 
 @csrf_exempt
 def denunciarGrupo (request):
