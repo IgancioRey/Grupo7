@@ -808,6 +808,8 @@ def PerfilUsuario(request, pk):
 
     return render(request,'home/perfil_usuario.html', {'materiasC':materiasC, 'usuario':usuario, 'cantidad_noticias':lista_noticias.count(), 'cantidad_publicaciones': lista_publicaciones.count(),'cantidad_denuncia': lista_denuncia.count()})
 
+
+@login_required
 def invitacion (request, pk):
 
     if not (int(pk)==int(request.user.id)):
