@@ -1,4 +1,5 @@
 from rest_framework import serializers
+<<<<<<< HEAD
 from .models import Usuario
 
 
@@ -32,3 +33,27 @@ class UsuarioSerializer(serializers.Serializer):
         instance.tipo = validated_data.get('tipo', instance.tipo)
         instance.save()
         return instance
+=======
+from home.models import Publicacion, Carrera, Materia, Usuario
+
+class NoticiaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Publicacion
+        fields = ('url', 'titulo', 'cuerpo', 'fecha_alta', 'aprovacion', 'tipo_publicacion')
+
+class CarrerasSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Carrera
+        fields = ('descripcion','cant_años')
+
+class MateriasSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+	    model = Materia
+	    fields = ('descripcion','carrera', 'año')
+
+class UsuariosSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+	    model = Usuario
+	    fields = ('nombre', 'eMail', 'tipo', 'estado')
+
+>>>>>>> 5f2b8e91fa9c3c725c1e917d2304b2950bf1ab95
