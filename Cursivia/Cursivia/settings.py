@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'home.apps.HomeConfig',
     'widget_tweaks',
+    'rest_framework',
+    'django_filters',
     ]
 
 MIDDLEWARE = [

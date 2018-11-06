@@ -1,7 +1,5 @@
 from urllib.parse import quote_plus
-
 from django.shortcuts import render, get_object_or_404, redirect
-# Create your views here.
 from django.contrib.auth import authenticate, login, logout
 from .models import Publicacion, Carrera, Materia, Usuario, Comentario, Denuncia, MeGusta
 #from .models import GroupInvitation, GroupProxy, GroupError, create_usergroup 
@@ -21,6 +19,11 @@ from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 import json  
 from django.http import JsonResponse
+from rest_framework import viewsets
+from rest_framework.filters import OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from Cursivia.serializers import NoticiaSerializer, CarrerasSerializer, MateriasSerializer, UsuariosSerializer
+
 
 def index(request):
     """
@@ -865,4 +868,26 @@ def designarAdministrador (request):
     return render(request, 'home/publicacion_detail.html')
 
 
-   
+""" APIS.""" 
+
+class NoticiaViewSet(viewsets.ModelViewSet):
+    queryset =  Publicacion.objects.all().filter(estado_publicacion__exact='p').order_by('-fecha_alta')
+    serializer_class = NoticiaSerializer
+    filter_backends = (OrderingFilter, DjangoFilterBackend) 
+
+class CarrerasViewSet(viewsets.ModelViewSet):
+    queryset = Carrera.objects.all() 
+    serializer_class = CarrerasSerializer
+    filter_backends = (OrderingFilter, DjangoFilterBackend)
+
+class MateriasViewSet(viewsets.ModelViewSet):
+    queryset = Materia.objects.all()
+    serializer_class = MateriasSerializer
+    filter_backends = (OrderingFilter, DjangoFilterBackend)
+
+class UsuariosViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuariosSerializer
+    filter_backends = (OrderingFilter, DjangoFilterBackend)
+
+"""FIN APIS"""

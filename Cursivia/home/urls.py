@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-
+from django.urls import path, include
 from . import forms
 from . import views
 
@@ -39,10 +39,11 @@ urlpatterns = [
     url(r'^foroGrupo/enviarInvitacion/$', views.enviarInvitacionGrupo, name ='enviar_invitacion_grupo'), 
     url(r'^foroGrupo/denunciar/$', views.denunciarGrupo, name ='denunciar_grupo'), 
     url(r'^foroGrupo/designarAdministrador/$', views.designarAdministrador, name ='designar_administrador'), 
+]
 
 
 
     #url(r'^noticiaDetail/(?P<pk>\d+)$', views.noticiaDetailView.as_view(), name='publicacion-detail'),
-	# url(r'^user/new/$', views.new_user, name='new-user'),
+	# url(r'^user/new/$    ', views.new_user, name='new-user'),
 	#url(r'^nuevaNoticia/$', views.nuevaNoticia, name="nuevaNoticia"),
-] 
+
