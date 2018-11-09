@@ -21,12 +21,20 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from home import views
+from rest_framework import routers 
+
+router = routers.DefaultRouter()
+router.register('noticias', views.NoticiaViewSet)
+router.register('carreras', views.CarrerasViewSet)
+router.register('materias', views.MateriasViewSet)
+router.register('usuarios', views.UsuariosViewSet)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', include('home.urls')),
     path('', RedirectView.as_view(url='/home/', permanent=True)),
+    path('api_v1/', include(router.urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()
