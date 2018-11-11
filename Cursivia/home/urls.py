@@ -2,6 +2,7 @@ from django.conf.urls import url, include
 from django.urls import path, include
 from . import forms
 from . import views
+from rest_framework.authtoken import views as viewsapi
 
 
 urlpatterns = [
@@ -10,7 +11,7 @@ urlpatterns = [
 	url(r'^confirmacion/$', views.confirmacion, name = 'confirmacion'),
 	url(r'^bienvenido/(?P<tokenActivacion>\w+)/', views.bienvenido, name = 'bienvenido'),
 	url(r'^configuracionCuenta/$', views.configuracionCuenta, name='configuracionCuenta'),
-	url(r'^noticia/(?P<pk>\d+)$', views.noticiaDetailForm.as_view(), name="publicacion-detail"),
+	url(r'^noticia/(?P<pk>\d+)$', views.noticiaDetailForm.as_view(), name="publicacion-detalle"),
     url(r'^foroMateria/materia/(?P<pk>\d+)$', views.publicacionDetailForm.as_view(), name="tema-detail"),
     url(r'^foroMateria/publicacion/create/(?P<pkM>\d+)$', views.PublicacionCreate.as_view(), name="tema-create"),
 	url(r'^noticia/create/$', views.NoticiaCreate.as_view(), name='noticia_create'),
@@ -39,6 +40,8 @@ urlpatterns = [
     url(r'^foroGrupo/enviarInvitacion/$', views.enviarInvitacionGrupo, name ='enviar_invitacion_grupo'), 
     url(r'^foroGrupo/denunciar/$', views.denunciarGrupo, name ='denunciar_grupo'), 
     url(r'^foroGrupo/designarAdministrador/$', views.designarAdministrador, name ='designar_administrador'), 
+    url(r'^api-token-auth/', viewsapi.obtain_auth_token),
+
 ]
 
 

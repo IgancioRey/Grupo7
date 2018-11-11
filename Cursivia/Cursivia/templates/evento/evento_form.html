@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+
+{% block sidebar %}
+<div class="sidebar-wrapper">
+
+<aside class="widget widget_categories">
+  <h2 class="widget-title"> Foro Carreras</h2>  
+  <ul>
+
+	{% for carrera,materia in lista_cantMaterias %} 
+	    <li><a href="{% url 'foro_carrera' carrera.id %}"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }}</span></a></li>
+	{% endfor %}     
+  </ul>
+</aside>
+
+</div>
+
+{% endblock sidebar %}
+
+
+{% block content %}
+  {% if messages %} 
+    {% for message in messages %}
+      <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <strong>Cuidado!</strong> {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  <form action="" method="post">
+      {% csrf_token %}
+
+    <div class="form-group ">   
+        <h1>Edicion de Evento</h1>
+        <p></p>
+        <div> 
+          <div class="form-group">
+            <label class="sr-only" for="descripcion"> Descripcion</label>
+            <input name="descripcion" class="form-control" id="id_descripcion" placeholder="Ingrese la descripcion del Evento" type="text" value="{{form.titulo.value}}">
+          </div>  
+
+          <div class="form-group">
+            <label class="sr-only" for="lugar">Lugar</label>
+            <input name="lugar" class="form-control" id="id_lugar" placeholder="Ingrese el lugar" type="text" value="{{form.cuerpo.value}}">
+          </div>
+
+          <div class="form-group">
+            <label class="sr-only" for="lugar">Lugar</label>
+            <input name="lugar" class="form-control" id="id_lugar" placeholder="Ingrese el lugar" type="text" value="{{form.cuerpo.value}}">
+          </div>
+          
+
+    </div>  
+    <div align="center" margin-top= "5px">
+    {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+    {% endif %}
+    </div>
+    <div align="center">
+      <button class="btn btn-primary" type="submit" name="action" value="registracion" style="margin-bottom: 50px;">Guardar
+        <i class="mdi-content-send right"></i>
+      </button> 
+    </div>
+  </form>
+
+  <script>
+  $(function() {
+    $( ".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2012",
+      // You can put more options here.
+
+    });
+  });
+  </script>
+  
+{% endblock content %}
