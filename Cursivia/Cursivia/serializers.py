@@ -1,5 +1,4 @@
-from rest_framework import serializers
-from .models import Usuario
+from rest_framework import serializers 
 from home.models import Publicacion, Carrera, Materia, Usuario
 
 
