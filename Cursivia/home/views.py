@@ -24,6 +24,13 @@ from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from Cursivia.serializers import NoticiaSerializer, CarrerasSerializer, MateriasSerializer, UsuariosSerializer
 
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
 
 def index(request):
     """
@@ -889,5 +896,15 @@ class UsuariosViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuariosSerializer
     filter_backends = (OrderingFilter, DjangoFilterBackend)
+
+@receiver(post_save, sender=get_user_model())
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
+User = get_user_model()
+for user in User.objects.all():
+    Token.objects.get_or_create(user=user)
+
 
 """FIN APIS"""

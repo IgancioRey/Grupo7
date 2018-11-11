@@ -2,6 +2,7 @@ from django.conf.urls import url, include
 from django.urls import path, include
 from . import forms
 from . import views
+from rest_framework.authtoken import views as viewsapi
 
 
 urlpatterns = [
@@ -39,6 +40,8 @@ urlpatterns = [
     url(r'^foroGrupo/enviarInvitacion/$', views.enviarInvitacionGrupo, name ='enviar_invitacion_grupo'), 
     url(r'^foroGrupo/denunciar/$', views.denunciarGrupo, name ='denunciar_grupo'), 
     url(r'^foroGrupo/designarAdministrador/$', views.designarAdministrador, name ='designar_administrador'), 
+    url(r'^api-token-auth/', viewsapi.obtain_auth_token),
+
 ]
 
 
