@@ -28,6 +28,7 @@ router.register('noticias', views.NoticiaViewSet)
 router.register('carreras', views.CarrerasViewSet)
 router.register('materias', views.MateriasViewSet)
 router.register('usuarios', views.UsuariosViewSet)
+router.register('comentarios', views.ComentariosViewSet)
 
 
 urlpatterns = [

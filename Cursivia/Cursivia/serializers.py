@@ -1,5 +1,6 @@
 from rest_framework import serializers 
-from home.models import Publicacion, Carrera, Materia, Usuario
+from home.models import Publicacion, Carrera, Materia, Usuario, Comentario
+from django.contrib.auth.models import User
 
 
 class UsuarioSerializer(serializers.Serializer):
@@ -37,21 +38,26 @@ class UsuarioSerializer(serializers.Serializer):
 class NoticiaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Publicacion
-        fields = ('url', 'titulo', 'cuerpo', 'fecha_alta', 'aprovacion', 'tipo_publicacion')
+        fields = ('id','url', 'titulo', 'cuerpo', 'fecha_alta', 'aprovacion', 'tipo_publicacion', 'materia')
 
 class CarrerasSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Carrera
-        fields = ('descripcion','cant_años')
+        fields = ('id','descripcion','cant_años')
 
 class MateriasSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 	    model = Materia
-	    fields = ('descripcion','carrera', 'año')
+	    fields = ('id','descripcion','carrera', 'año')
 
 class UsuariosSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 	    model = Usuario
-	    fields = ('nombre', 'eMail', 'tipo', 'estado')
+	    fields = ('id', 'nombre', 'eMail', 'tipo', 'estado')
+
+class ComentariosSerializer(serializers.HyperlinkedModelSerializer): 
+    class Meta:
+        model = Comentario
+        fields = ('id','comentario','publicacion')
 
 
