@@ -53,7 +53,7 @@ class MateriasSerializer(serializers.HyperlinkedModelSerializer):
 class UsuariosSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 	    model = Usuario
-	    fields = ('id', 'nombre', 'eMail', 'tipo', 'estado')
+	    fields = ('id', 'nombre', 'eMail', 'tipo', 'estado', 'usuario')
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
