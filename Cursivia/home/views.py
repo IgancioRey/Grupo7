@@ -22,7 +22,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from Cursivia.serializers import NoticiaSerializer, CarrerasSerializer, MateriasSerializer, UsuariosSerializer, ComentariosSerializer
+from Cursivia.serializers import meGustaSerializer, UserSerializer, NoticiaSerializer, CarrerasSerializer, MateriasSerializer, UsuariosSerializer, ComentariosSerializer
 
 from django.conf import settings
 from django.db.models.signals import post_save
@@ -899,9 +899,19 @@ class UsuariosViewSet(viewsets.ModelViewSet):
     serializer_class = UsuariosSerializer
     filter_backends = (OrderingFilter, DjangoFilterBackend)
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    filter_backends = (OrderingFilter, DjangoFilterBackend)
+
 class ComentariosViewSet(viewsets.ModelViewSet):
     queryset = Comentario.objects.all()
     serializer_class = ComentariosSerializer
+    filter_backends = (OrderingFilter, DjangoFilterBackend)
+
+class MeGustaViewSet(viewsets.ModelViewSet):
+    queryset = MeGusta.objects.all()
+    serializer_class = meGustaSerializer
     filter_backends = (OrderingFilter, DjangoFilterBackend)
 
 @receiver(post_save, sender=get_user_model())
