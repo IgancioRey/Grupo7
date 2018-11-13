@@ -314,3 +314,15 @@ class Estado_Grupo(models.Model):
 
     def __str__(self):
         return self.estado
+
+class Evento(models.Model):
+    
+    grupo = models.ForeignKey(Group, on_delete=models.CASCADE)
+    usuarioCreador = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)
+    titulo = models.CharField(max_length=100)
+    cuerpo = models.TextField(max_length=200)
+    fecha_evento = models.DateTimeField(default=timezone.now, null=True)
+    lugarEvento = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.titulo

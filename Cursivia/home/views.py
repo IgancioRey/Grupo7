@@ -1,7 +1,7 @@
 from urllib.parse import quote_plus
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
-from .models import Publicacion, Carrera, Materia, Usuario, Comentario, Denuncia, MeGusta
+from .models import Publicacion, Carrera, Materia, Usuario, Comentario, Denuncia, MeGusta, Evento
 #from .models import GroupInvitation, GroupProxy, GroupError, create_usergroup 
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
@@ -737,6 +737,8 @@ def foroGrupo(request,pk):
     lista_publicaciones = Publicacion.objects.all().filter(grupo=group,tipo_publicacion__exact='g', estado_publicacion__exact='p').order_by('-fecha_alta')
     lista_carreras = Carrera.objects.all() 
 
+    lista_evento = Evento.objects.all().filter(grupo=group).order_by('fecha_evento')    
+
 
     lista_publicaciones_comentarios=[]
     for l in lista_publicaciones: 
@@ -753,20 +755,21 @@ def foroGrupo(request,pk):
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
     usuarios_no_miembro =[]
-
     estado = Estado_Grupo.objects.get(grupo= group)
     usuario_no_admin = []
     usuarios_miembro= group.user_set.all()
     for usuarioM in usuarios_miembro:
         if (usuarioM != estado.admin):
             usuario_no_admin.append(usuarioM)
+        else:
+            usuario_admin = usuarioM
 
     lista_usuarios = Usuario.objects.all()
     for usuario in lista_usuarios:
         if (usuario.usuario not in usuarios_miembro):
             usuarios_no_miembro.append(usuario)
 
-    return render(request, 'home/grupo-foro.html', {'usuarios_no_admin':usuario_no_admin,'lista_usuarios_miembros': usuarios_miembro, 'lista_usuarios' : usuarios_no_miembro, 'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group': group})
+    return render(request, 'home/grupo-foro.html', {'lista_evento': lista_evento,'usuario_admin': usuario_admin, 'usuarios_no_admin':usuario_no_admin,'lista_usuarios_miembros': usuarios_miembro, 'lista_usuarios' : usuarios_no_miembro, 'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group': group})
 
 @login_required
 @csrf_exempt
@@ -876,6 +879,18 @@ def designarAdministrador (request):
 
     return render(request, 'home/publicacion_detail.html')
 
+@csrf_exempt
+def crearEvento(request):
+    grupo = get_object_or_404(Group, id = request.POST['idGroup'])
+    usuario = get_object_or_404(User, id = request.user.id)
+    descripcion = request.POST['descripcion']
+    titulo = request.POST['titulo']
+    lugar = request.POST['lugar']
+    fecha = request.POST['fecha']
+    envento = Evento(grupo= grupo, usuarioCreador= usuario, cuerpo=descripcion, titulo= titulo, lugarEvento=lugar, fecha_evento=fecha)
+    envento.save()
+
+    return render(request, 'home/grupo-foro.html')
 
 """ APIS.""" 
 
