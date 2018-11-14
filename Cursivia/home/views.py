@@ -27,9 +27,7 @@ from Cursivia.serializers import tokenSerializer, meGustaSerializer, UserSeriali
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token 
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 import datetime
@@ -1005,9 +1003,7 @@ class ComentariosViewSet(viewsets.ModelViewSet):
 class MeGustaViewSet(viewsets.ModelViewSet):
     queryset = MeGusta.objects.all()
     serializer_class = meGustaSerializer
-    filter_backends = (OrderingFilter, DjangoFilterBackend)
-    permission_classes = (IsAuthenticated, )
-    authentication_classes = (TokenAuthentication, )
+    filter_backends = (OrderingFilter, DjangoFilterBackend) 
 
 class TokenViewSet(viewsets.ModelViewSet):
     queryset = Token.objects.all()
