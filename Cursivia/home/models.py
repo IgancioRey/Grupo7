@@ -326,3 +326,12 @@ class Evento(models.Model):
     
     def __str__(self):
         return self.titulo
+
+class PersonaEvento(models.Model):
+    
+    evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)
+
+    
+    def __str__(self):
+        return self.usuario.username

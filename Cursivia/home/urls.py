@@ -3,6 +3,9 @@ from django.urls import path, include
 from . import forms
 from . import views
 from rest_framework.authtoken import views as viewsapi
+from django.contrib import admin
+from django.views.generic.base import RedirectView
+
 
 
 urlpatterns = [
@@ -42,6 +45,8 @@ urlpatterns = [
     url(r'^foroGrupo/designarAdministrador/$', views.designarAdministrador, name ='designar_administrador'),
     url(r'^foroGrupo/crearEvento/$', views.crearEvento, name ='crear_evento'), 
     url(r'^api-token-auth/', viewsapi.obtain_auth_token),
+    url(r'^foroGrupo/sacarEvento/$', views.sacarEvento, name ='sacar_evento'), 
+    url('admin/$', views.admin, name='admin')
 
 ]
 

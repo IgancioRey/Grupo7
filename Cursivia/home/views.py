@@ -1,7 +1,7 @@
 from urllib.parse import quote_plus
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
-from .models import Publicacion, Carrera, Materia, Usuario, Comentario, Denuncia, MeGusta, Evento
+from .models import Publicacion, Carrera, Materia, Usuario, Comentario, Denuncia, MeGusta, Evento, PersonaEvento
 #from .models import GroupInvitation, GroupProxy, GroupError, create_usergroup 
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
@@ -30,6 +30,7 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+import datetime
 
 
 def index(request):
@@ -737,8 +738,16 @@ def foroGrupo(request,pk):
     lista_publicaciones = Publicacion.objects.all().filter(grupo=group,tipo_publicacion__exact='g', estado_publicacion__exact='p').order_by('-fecha_alta')
     lista_carreras = Carrera.objects.all() 
 
-    lista_evento = Evento.objects.all().filter(grupo=group).order_by('fecha_evento')    
-
+    eventoPersona = []
+    miembrosOrtivas= []
+    miembrosOrtivasposta = []
+    lista_evento = Evento.objects.all().filter(grupo=group, fecha_evento__gte = datetime.date.today()).order_by('fecha_evento')    
+    for evento in lista_evento:
+        miembrosOrtivas = PersonaEvento.objects.all().filter(evento=evento)
+        for m in miembrosOrtivas:
+            miembrosOrtivasposta.append(m.usuario)
+        eventoPersona.append((evento,miembrosOrtivasposta))
+        miembrosOrtivasposta = []
 
     lista_publicaciones_comentarios=[]
     for l in lista_publicaciones: 
@@ -769,7 +778,7 @@ def foroGrupo(request,pk):
         if (usuario.usuario not in usuarios_miembro):
             usuarios_no_miembro.append(usuario)
 
-    return render(request, 'home/grupo-foro.html', {'lista_evento': lista_evento,'usuario_admin': usuario_admin, 'usuarios_no_admin':usuario_no_admin,'lista_usuarios_miembros': usuarios_miembro, 'lista_usuarios' : usuarios_no_miembro, 'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group': group})
+    return render(request, 'home/grupo-foro.html', {'eventoPersona':eventoPersona,'lista_evento': lista_evento,'usuario_admin': usuario_admin, 'usuarios_no_admin':usuario_no_admin,'lista_usuarios_miembros': usuarios_miembro, 'lista_usuarios' : usuarios_no_miembro, 'lista_publicaciones': lista_publicaciones_comentarios, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC, 'group': group})
 
 @login_required
 @csrf_exempt
@@ -892,6 +901,16 @@ def crearEvento(request):
 
     return render(request, 'home/grupo-foro.html')
 
+
+@csrf_exempt
+def sacarEvento(request):
+    evento = get_object_or_404(Evento, id = request.POST['idEvento'])
+    usuario = get_object_or_404(User, id = request.user.id)
+    personaEvento = PersonaEvento(evento= evento, usuario= usuario)
+    personaEvento.save()
+
+    return render(request, 'home/grupo-foro.html')
+
 """ APIS.""" 
 
 class NoticiaViewSet(viewsets.ModelViewSet):
@@ -940,3 +959,8 @@ for user in User.objects.all():
 """
 
 """FIN APIS"""
+
+def admin(request):
+    print("EBTRA")
+    return HttpResponseRedirect("/admin/")
+

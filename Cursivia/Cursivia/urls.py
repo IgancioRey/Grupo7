@@ -36,7 +36,7 @@ router.register('meGusta', views.MeGustaViewSet)
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('home/', include('home.urls')),
     path('', RedirectView.as_view(url='/home/', permanent=True)),
     path('api_v1/', include(router.urls)),

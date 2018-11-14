@@ -31,11 +31,11 @@
             <div class="dropdown">
               <button type="button" data-toggle="dropdown" class="flaticon-settings56"> </button>
               <ul class="dropdown-menu" role="menu">
+                <li><a class="flaticon-calendar13" data-toggle="modal" data-target="#ModalEvento"> &nbsp; Crear evento</a></li>
                 {% if user.id  == usuario_admin.id %}
                   <li><a class="flaticon-symbol14" data-toggle="modal" data-target="#ModalUsuarios"> &nbsp; Agregar Miembro</a></li>
                   <li><a class="flaticon-worker22" data-toggle="modal" data-target="#ModalAdministradores"> &nbsp; Designar administrador</a></li>
                 {% endif %}
-                <li><a class="flaticon-calendar13" data-toggle="modal" data-target="#ModalEvento"> &nbsp; Crear evento</a></li>
               </ul>
           </div>
         </div>
@@ -173,19 +173,21 @@
    </div>
 
     <div id="divGeneral">
-      {% for evento in lista_evento %}
-        <div class="cta-v1">
-            <div class="row">
-                <div class="col-sm-9">
-                    <h2>Initacion al evento "{{evento.titulo}}"</h2>
-                    <p>Te esperamos en {{evento.lugarEvento}} el dia {{evento.fecha_evento.date}}.</p>
-                </div>
-                <div class="col-sm-3">
-                    <a href="#" class="btn btn-primary">Dejar de recordar</a>
-                </div>
-            </div><!-- /.row -->
-        </div>
-        <p></p>
+      {% for evento,miembroOrtiva in eventoPersona %}
+        {% if user not in miembroOrtiva %}
+          <div class="cta-v1">
+              <div class="row">
+                  <div class="col-sm-9">
+                      <h2>Initacion al evento "{{evento.titulo}}"</h2>
+                      <p>Te esperamos en {{evento.lugarEvento}} el dia {{evento.fecha_evento.date}}.</p>
+                  </div>
+                  <div class="col-sm-3">
+                      <a onclick="sacar_notificacion({{evento.id}})" class="btn btn-primary">Dejar de recordar</a>
+                  </div>
+              </div><!-- /.row -->
+          </div>
+          <p></p>
+        {% endif %}
       {% endfor%}
       {% for publicacion,comentarios,meGustas in lista_publicaciones %}
       <div id="divPublicacion">
@@ -316,7 +318,7 @@
           data: {idGroup: idGrupo, titulo: titulo, descripcion: descripcion, lugar: lugar, fecha: fecha},
           success: function (data) {
             $("#id_titulo").val("");
-            $("#id_cuerpo").val("");
+            $("#id_descripcion").val("");
             $("#id_lugarEvento").val("");
             $("#id_fecha").val("");
             $("#divGeneral").load(" #divGeneral");
@@ -483,7 +485,23 @@
       }
     });
   };  
+
+  function sacar_notificacion(idEvento){
+      $.ajax({
+      type: 'POST',
+      url: '/home/foroGrupo/sacarEvento/',
+      data: {idEvento: idEvento},
+      success: function (data) {
+        $("#divGeneral").load(" #divGeneral");
+      },
+      error: function(data) {
+      }
+    });
+  };  
 </script>
+
+
+
 
 
 
