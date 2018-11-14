@@ -46,7 +46,11 @@ urlpatterns = [
     url(r'^foroGrupo/crearEvento/$', views.crearEvento, name ='crear_evento'), 
     url(r'^api-token-auth/', viewsapi.obtain_auth_token),
     url(r'^foroGrupo/sacarEvento/$', views.sacarEvento, name ='sacar_evento'), 
-    url('admin/$', views.admin, name='admin')
+    url('admin/$', views.admin, name='admin'),
+    url(r'^perfil/(?P<pk>\d+)/edit/$', views.EditarPerfilUsuario, name ='editar_perfil_usuario'),
+    url(r'^perfil/(?P<pk>\d+)/save/$', views.GuardarPerfilUsuario, name ='guardar_perfil_usuario'),
+
+
 
 ]
 

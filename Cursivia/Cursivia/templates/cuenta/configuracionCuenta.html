@@ -72,15 +72,16 @@
           <div class="row text-center col-sm-3">
           </div>
           <div class="row text-center col-sm-9">
-              <a href="{% url 'index' %}"></a>
-              <div class="col-md-5 col-sm-6 sbox-gutter">
-                  <div class="service-box">
-                      <i class="flaticon-male26"></i>
-                      <h3>Perfil</h3>
-                      <p>Accede aquí para visualizar o modificar algun aspecto de tu perfil </p>
+              <a href="{% url 'editar_perfil_usuario' pk=user.id %}">
+                <div class="col-md-5 col-sm-6 sbox-gutter">
+                    <div class="service-box">
+                        <i class="flaticon-male26"></i>
+                        <h3>Perfil</h3>
+                        <p>Accede aquí para modificar algun aspecto de tu perfil </p>
 
-                  </div><!-- /.service-box -->
-              </div><!-- /.col-sm-4 -->
+                    </div><!-- /.service-box -->
+                </div><!-- /.col-sm-4 -->
+              </a>
 
               <div class="col-md-5 col-sm-6 sbox-gutter">
                   <a href="{% url 'index' %}"></a>

@@ -19,102 +19,107 @@
 
 {% block content %}
 
-   <section class="history-section">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-6 col-md-5 no-padding">
-                        <img src="{% static 'assets/images/perfil.jpg ' %}" alt="image">
+ <section class="history-section">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 col-md-5 no-padding">
+                <img src="{% static 'assets/images/perfil.jpg ' %}" alt="image">
 
-                    </div><!-- /.col-md-6 -->
-                    <div class="col-lg-6 col-md-7 no-padding">
+            </div><!-- /.col-md-6 -->
+            <div class="col-lg-6 col-md-7 no-padding">
 
-                        <div id="particles-js"></div>
-                        <div class="history-wrapper">
-                            <h2>Perfil usuario</h2>
+                <div id="particles-js"></div>
+                <div class="history-wrapper">
+                    <h2>Perfil usuario</h2>
 
-                            <div id="historyCarousel" class="carousel slide" data-ride="carousel">
+                    <div id="historyCarousel" class="carousel slide" data-ride="carousel">
 
-                              <!-- Wrapper for slides -->
-                              <div class="carousel-inner" role="listbox">
-                                <div class="item active">
-                                    <h3>Conoce a {{usuario.nombre}}</h3>
+                      <!-- Wrapper for slides -->
+                      <div class="carousel-inner" role="listbox">
+                        <div class="item active">
+                            <h3>Conoce a {{usuario.nombre}}</h3>
 
-                                    <p style="margin-bottom: 10px;">Nombre completo: {{usuario.nombre}} {{usuario.apellido}}</p>
-                                    <p style="margin-bottom: 10px;">Direccion de correo: {{usuario.eMail}}</p>
-                                    {% if usuario.fechaNacimiento != None %}
-                                        <p style="margin-bottom: 10px;">Fecha de nacimiento: {{usuario.fechaNacimiento}}</p>
-                                    {% endif %}
-                                    {% if usuario.localidad != None %}
-                                        <p style="margin-bottom: 10px;">Localidad: {{usuario.localidad}}</p>
-                                    {% endif %}
-                                    {% if usuario.fechaAlta != None %}
-                                        <p style="margin-bottom: 10px;">Forma parte de nuestra Comunidad desde: {{usuario.fechaAlta}}</p>
-                                    {% endif %}
-                                    {% if cantidad_noticias > 0 %}
-                                        <p style="margin-bottom: 10px;">Cantidad de noticias realizadas: {{cantidad_noticias}}</p>
-                                    {% endif %}
-                                    {% if cantidad_publicaciones > 0 %}
-                                        <p style="margin-bottom: 10px;">Cantidad de publicaciones realizadas: {{cantidad_publicaciones}}</p>
-                                    {% endif %}
-                                    {% if cantidad_denuncia > 0 %}
-                                        <p style="margin-bottom: 10px;">Cantidad de denuncias adquiridas: {{cantidad_denuncia}}</p>
-                                    {% endif %}
-                                </div>
-
-                                <div class="item">
-                                    <h3>Breve descripcion de mi persona</h3>
-                                    {% if usuario.descripcion != "" %}
-                                        <p style="margin-bottom: 10px;"> {{usuario.descrpcion}}</p>
-                                    {% else %}
-                                        <p>El usuario no contiene una descpricion</p>
-                                    {% endif %}
-                                </div>
-                              <!-- Controls -->
-                              <a class="left carousel-control" href="#historyCarousel" role="button" data-slide="prev">
-                                <span class="fa fa-angle-left" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                              </a>
-                              <a class="right carousel-control" href="#historyCarousel" role="button" data-slide="next">
-                                <span class="fa fa-angle-right" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                              </a>
-                            </div>
+                            <p style="margin-bottom: 10px;">Nombre completo: {{usuario.nombre}} {{usuario.apellido}}</p>
+                            <p style="margin-bottom: 10px;">Direccion de correo: {{usuario.eMail}}</p>
+                            {% if usuario.fechaNacimiento != None %}
+                                <p style="margin-bottom: 10px;">Fecha de nacimiento: {{usuario.fechaNacimiento}}</p>
+                            {% endif %}
+                            {% if usuario.localidad != None %}
+                                <p style="margin-bottom: 10px;">Localidad: {{usuario.localidad}}</p>
+                            {% endif %}
+                            {% if usuario.fechaAlta != None %}
+                                <p style="margin-bottom: 10px;">Forma parte de nuestra Comunidad desde: {{usuario.fechaAlta}}</p>
+                            {% endif %}
+                            {% if cantidad_noticias > 0 %}
+                                <p style="margin-bottom: 10px;">Cantidad de noticias realizadas: {{cantidad_noticias}}</p>
+                            {% endif %}
+                            {% if cantidad_publicaciones > 0 %}
+                                <p style="margin-bottom: 10px;">Cantidad de publicaciones realizadas: {{cantidad_publicaciones}}</p>
+                            {% endif %}
+                            {% if cantidad_denuncia > 0 %}
+                                <p style="margin-bottom: 10px;">Cantidad de denuncias adquiridas: {{cantidad_denuncia}}</p>
+                            {% endif %}
                         </div>
-                    </div><!-- /.col-md-4 -->
+
+                        <div class="item">
+                            <h3>Breve descripcion de mi persona</h3>
+                            {% if usuario.descripcion != "" %}
+                                <p style="margin-bottom: 10px;"> {{usuario.descripcion}}</p>
+                            {% else %}
+                                <p>El usuario no contiene una descpricion</p>
+                            {% endif %}
+                        </div>
+                      <!-- Controls -->
+                      <a class="left carousel-control" href="#historyCarousel" role="button" data-slide="prev">
+                        <span class="fa fa-angle-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                      <a class="right carousel-control" href="#historyCarousel" role="button" data-slide="next">
+                        <span class="fa fa-angle-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                      </a>
                     </div>
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </section>
-      </br>
-        <button class="btn btn-primary" type="submit" data-toggle="modal" data-target="#ModalConfirmarDenuncia">Denunciar usuario
-        <i class="mdi-content-send right"></i>
-        </button>
-            
-
-
-        <!-- /.modal -->
-       
-          <div class="modal fade" id="ModalConfirmarDenuncia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <h3 class="modal-title" id="exampleModalLabel">Está seguro que desea denunciar al usuario?</h3>
                 </div>
-                <div class="modal-body">
-                    <input name="idPublicacion" class="form-control" id="idPublicacion" type="hidden" value="">
-                    <textarea name="comentarioDenuncia" class="form-control" id="id_comentarioDenuncia" placeholder="Ingrese el motivo por el cual esta denunciando este usuario" type="text" rows="4"></textarea>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                  <button type="submit" name="action" class="btn btn-success" data-dismiss="modal" onclick="denuncia_usuario({{usuario.id}})">Denunciar Usuario</button>
-                </div>
-              </div>
+            </div><!-- /.col-md-4 -->
+            </br>
             </div>
-          </div>
-        <!-- /.modal -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<footer class="entry-footer clearfix">
+  <ul class="entry-meta pull-left">
+      {% if usuario.usuario.id != user.id %}
+        <li><span class="post-comments"><a data-toggle="modal" data-target="#ModalConfirmarDenuncia"><i class="fa fa-delete"></i> Denunciar</a></span></li>
+      {% else %}
+        <li><span class="post-comments"><a href="{% url 'editar_perfil_usuario' pk=user.id %}"><i class="fa fa-delete"></i> Editar Perfil </a></span></li>
+      {% endif %}
+  </ul>
+</footer>
+
+
+<!-- /.modal -->
+
+  <div class="modal fade" id="ModalConfirmarDenuncia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="modal-title" id="exampleModalLabel">Está seguro que desea denunciar al usuario?</h3>
+        </div>
+        <div class="modal-body">
+            <input name="idPublicacion" class="form-control" id="idPublicacion" type="hidden" value="">
+            <textarea name="comentarioDenuncia" class="form-control" id="id_comentarioDenuncia" placeholder="Ingrese el motivo por el cual esta denunciando este usuario" type="text" rows="4"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+          <button type="submit" name="action" class="btn btn-success" data-dismiss="modal" onclick="denuncia_usuario({{usuario.id}})">Denunciar Usuario</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- /.modal -->
 
 
 

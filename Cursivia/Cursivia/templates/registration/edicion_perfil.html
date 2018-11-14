@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+
+  {% load static %} 
+  {% block imagen_presentacion %}
+  {% endblock %}
+
+  {% block sidebar %}
+    <div class="sidebar-wrapper">
+        <aside class="widget widget_categories">
+          <h2 class="widget-title">Foro Carreras</h2>  
+            <ul>
+              {% for carrera,materia in lista_cantMaterias %}
+                  <li><a href="{% url 'foro_carrera' carrera.id %}"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }}</span></a></li>
+              {% endfor %}      
+            </ul>
+        </aside>
+
+    </div>
+  {% endblock sidebar %} 
+
+  {% block content %}
+    <form class="form-horizontal" action="{% url 'guardar_perfil_usuario' pk=user.id %}" method="POST">
+      <div>
+        {% csrf_token%}
+        <div class="form-group ">   
+
+          
+          <h1>Editar mi perfil</h1>
+          <p></p>
+
+          <div class="col-md-5"> 
+            <div class="form-group">
+              <label class="sr-only" for="nombreUsuario">Nombre de Usuario</label>
+              <input name="nombreUsuario" class="form-control" id="id_nombreUsuario" placeholder="Tu Nombre de Usuario" type="text" value="{{usuario.usuario.username}}">
+            </div> 
+
+            <div class="form-group">
+              <label class="sr-only" for="nombre">Nombre</label>
+              <input name="nombre" class="form-control" id="id_nombre" placeholder="Tu Nombre" type="text" value="{{usuario.nombre}}">
+            </div> 
+
+            <div class="form-group">
+              <label class="sr-only" for="apellido">Apellido</label>
+              <input name="apellido" class="form-control" id="id_apellido" placeholder="Tu Apellido" type="text" value="{{usuario.apellido}}">
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="fechaNacimiento">FechaNacimiento</label>
+              <input style="padding-bottom: 15px;" name="fechaNacimiento" class="form-control" id="id_fechaNacimiento" placeholder="Tu Fecha de nacimiento" type="Date" value="{{usuario.fechaNacimiento}}">
+            </div>
+          </div>
+          <div class="col-md-2">  
+          </div>
+          <div class="col-md-5">  
+            <div class="form-group">
+              <label class="sr-only" for="email">eMail</label>
+              <input name="email" class="form-control" id="id_email" placeholder="Tu eMail" type="text" value="{{usuario.eMail}}">
+            </div>
+
+            <div class="form-group">
+              {% if usuario.localidad == None%}
+                <label class="sr-only" for="localidad">Localidad</label>
+                <input name="localidad" class="form-control" id="id_localidad" placeholder="Tu localidad de residencia" type="text">
+              {% else %}
+                <label class="sr-only" for="localidad">Localidad</label>
+                <input name="localidad" class="form-control" id="id_localidad" placeholder="Tu localidad de residencia" type="text" value="{{usuario.localidad}}">
+              {% endif%}
+            </div>
+
+            <div class="form-group">
+              <label class="sr-only" for="descripcion">Descripcion</label>
+              <textarea name="descripcion" class="form-control" id="id_descripcion" placeholder="Una breve descripcion de  tu persona" type="text" rows="2">{{usuario.descripcion}}</textarea>
+            </div>
+          </div>
+        </div>  
+        <div align="center" margin-top= "5px">
+        {% if messages %}
+            <ul class="messages">
+              {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+              {% endfor %}
+            </ul>
+        {% endif %}
+        </div>
+        <div align="center">
+          <button class="btn btn-primary" type="submit" name="action" value="registracion">Guardar cambios
+            <i class="mdi-content-send right"></i>
+          </button> 
+        </div>
+      </div>
+    </form>
+  {% endblock content %}

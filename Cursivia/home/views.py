@@ -911,6 +911,63 @@ def sacarEvento(request):
 
     return render(request, 'home/grupo-foro.html')
 
+def EditarPerfilUsuario(request, pk):
+    user = get_object_or_404(User, pk = request.user.id)
+    usuario = get_object_or_404(Usuario, usuario = user)
+
+    return render(request,'registration/edicion_perfil.html', {'usuario':usuario})
+
+def GuardarPerfilUsuario (request, pk):
+    if request.method=='POST':
+        user = get_object_or_404(User, id = request.user.id)
+        usuario = get_object_or_404(Usuario, usuario = user)
+
+        lista_mismo_nombre = User.objects.all().filter(username = request.POST['nombreUsuario'])
+        lista_mismo_mail = User.objects.filter(email=request.POST['email'])
+
+        if not lista_mismo_nombre.count() > 1:
+            if not lista_mismo_mail.count() > 1: 
+
+                nombreUsuario        = request.POST['nombreUsuario']
+                nombre          = request.POST['nombre']
+                apellido        = request.POST['apellido']
+                email           = request.POST['email']
+                localidad       = request.POST['localidad']
+                fechaNacimiento = request.POST['fechaNacimiento']
+                descripcion = request.POST['descripcion']
+
+
+                user.nombreUsuario  = nombreUsuario          
+                usuario.nombre      = nombre
+                usuario.apellido    = apellido
+                usuario.eMail       = email
+                usuario.descripcion = descripcion
+                usuario.localidad   = localidad
+                print ("FECHA",fechaNacimiento)
+                if fechaNacimiento != '':
+                    usuario.fechaNacimiento= fechaNacimiento 
+
+                user.save()
+                usuario.save() 
+                print ("Usuario despues", usuario, user)
+
+
+
+    user = User.objects.get(id__exact=pk)
+    usuario = Usuario.objects.get(usuario=user)
+
+    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='n', usuario__exact=user)
+    lista_publicaciones = Publicacion.objects.all().filter(tipo_publicacion__exact='p', usuario__exact=user)
+    lista_denuncia = Publicacion.objects.all().filter(usuario__exact=user, tipo_publicacion='d')
+
+    lista_carreras = Carrera.objects.all() 
+    materiasC =[]
+    for l in lista_carreras: 
+        materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+            
+    return render(request,'home/perfil_usuario.html', {'materiasC':materiasC, 'usuario':usuario, 'cantidad_noticias':lista_noticias.count(), 'cantidad_publicaciones': lista_publicaciones.count(),'cantidad_denuncia': lista_denuncia.count()})
+
+
 """ APIS.""" 
 
 class NoticiaViewSet(viewsets.ModelViewSet):
