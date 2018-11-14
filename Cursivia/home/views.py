@@ -1004,6 +1004,8 @@ class MeGustaViewSet(viewsets.ModelViewSet):
     queryset = MeGusta.objects.all()
     serializer_class = meGustaSerializer
     filter_backends = (OrderingFilter, DjangoFilterBackend)
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, )
 
 class TokenViewSet(viewsets.ModelViewSet):
     queryset = Token.objects.all()
