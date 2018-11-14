@@ -1003,7 +1003,21 @@ def ContenidoDenunciado (request):
 
     return render(request,'cuenta/contenido_denunciado.html', {'lista_cantMaterias':materiasC, 'lista_publicaciones_denunciadas': lista_publicaciones_denunciadas})
 
-    return
+@csrf_exempt
+def ConfirmarDenuncua(request):
+    noticia = get_object_or_404(Publicacion, id = request.POST['idP'] )  
+    noticia.estado_publicacion = 'e'
+    noticia.save()
+
+    return render(request,'cuenta/contenido_denunciado.html')
+
+@csrf_exempt
+def RechazarDenuncua(request):
+    noticia = get_object_or_404(Publicacion, id = request.POST['idP'] )  
+    noticia.estado_publicacion = 'e'
+    noticia.save()
+
+    return render(request,'cuenta/contenido_denunciado.html')
 
 """ APIS.""" 
 
