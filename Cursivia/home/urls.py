@@ -49,6 +49,8 @@ urlpatterns = [
     url('admin/$', views.admin, name='admin'),
     url(r'^perfil/(?P<pk>\d+)/edit/$', views.EditarPerfilUsuario, name ='editar_perfil_usuario'),
     url(r'^perfil/(?P<pk>\d+)/save/$', views.GuardarPerfilUsuario, name ='guardar_perfil_usuario'),
+    url(r'^mis Foros/(?P<pk>\d+)$', views.VerMisForos, name ='ver_mis_foros'),
+
 
 
 

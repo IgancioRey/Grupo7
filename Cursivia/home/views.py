@@ -967,6 +967,28 @@ def GuardarPerfilUsuario (request, pk):
             
     return render(request,'home/perfil_usuario.html', {'materiasC':materiasC, 'usuario':usuario, 'cantidad_noticias':lista_noticias.count(), 'cantidad_publicaciones': lista_publicaciones.count(),'cantidad_denuncia': lista_denuncia.count()})
 
+def VerMisForos(request, pk):
+    user = User.objects.get(id__exact=pk)
+    lista_noticias = Publicacion.objects.all().filter(tipo_publicacion__exact='f', usuario__exact= user).order_by('-fecha_alta')
+
+    lista_noticias_completa =[]
+    for l in lista_noticias:
+        if l.titulo != "Publicacion - Foro" and l.titulo!= "Publicacion - Grupo": 
+            lista_noticias_completa.append([l,Comentario.objects.all().filter(publicacion__exact=l, estado_comentario__exact='p').count()])
+
+    paginator = Paginator(lista_noticias_completa, 5)
+
+    page = request.GET.get('page')
+    noticias = paginator.get_page(page)
+
+    lista_carreras = Carrera.objects.all() 
+    materiasC =[]
+    for l in lista_carreras: 
+        materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+
+
+    return render(request, 'index.html', {'noticias': noticias, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC})
+  
 
 """ APIS.""" 
 

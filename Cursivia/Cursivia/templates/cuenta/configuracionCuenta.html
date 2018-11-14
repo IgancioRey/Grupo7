@@ -84,12 +84,13 @@
               </a>
 
               <div class="col-md-5 col-sm-6 sbox-gutter">
-                  <a href="{% url 'index' %}"></a>
-                  <div class="service-box">
+                  <a href="{% url 'ver_mis_foros' pk=user.id%}">
+                    <div class="service-box">
                       <i class="flaticon-newspapers2"></i>
-                      <h3>Publicaciones</h3>
-                      <p>Accede aqui para visualizar, modificar o eliminar tus publicaciones</p>
-                  </div><!-- /.service-box -->
+                      <h3>Publicaciones en Foros</h3>
+                      <p>Accede aqui para visualizar, modificar o eliminar tus foros genrados en materias</p>
+                    </div><!-- /.service-box -->
+                  </a>
               </div><!-- /.col-sm-4 -->
           </div>
 
@@ -101,8 +102,8 @@
                   <a href="{% url 'index' %}"></a>
                   <div class="service-box">
                       <i class="flaticon-book17"></i>
-                      <h3>Documentos almacendos</h3>
-                      <p>Accede aquí para visualizar todo el contenido importante que almacenaste</p>
+                      <h3>Publicaciones en Grupos</h3>
+                      <p>Accede aquí para visualizar todas las pubñicaciones que hiciste en grupos</p>
                   </div><!-- /.service-box -->
               </div><!-- /.col-sm-4 -->
 
