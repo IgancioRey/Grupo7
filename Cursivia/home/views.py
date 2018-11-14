@@ -491,7 +491,9 @@ def DenunciarNoticia(request):
         
 
         if (tipo_denuncia == 'publicacion'):
-            noticia = get_object_or_404(Publicacion, id = request.POST['id'] )   
+            noticia = get_object_or_404(Publicacion, id = request.POST['id'] )  
+            usuarioDenunciado = get_object_or_404(Usuario, usuario = noticia.usuario)
+
             cantidad_denuncias = Denuncia.objects.all().filter(publicacion= noticia).count()
             if  (cantidad_denuncias >= 3):
                 noticia.estado_publicacion = 'd'
@@ -500,7 +502,7 @@ def DenunciarNoticia(request):
             if (comentario == ''):
                 print("Tendriamos que tirar mensaje")        
             else:
-                denuncia = Denuncia(publicacion= noticia, comentario= comentario, usuario= usuario, fecha_alta= fecha_alta)
+                denuncia = Denuncia(usuarioDenunciado= usuarioDenunciado, publicacion= noticia, comentario= comentario, usuario= usuario, fecha_alta= fecha_alta)
                 denuncia.save()
 
         else:
@@ -594,6 +596,8 @@ def DenunciarPublicacion(request):
     if request.method=='POST':
 
         publicacion = get_object_or_404(Publicacion, id = request.POST['id'] )   
+        usuarioDenunciado = get_object_or_404(Usuario, usuario = publicacion.usuario)
+
         cantidad_denuncias = Denuncia.objects.all().filter(publicacion= publicacion).count()
         print (cantidad_denuncias)
         if  (cantidad_denuncias >= 3):
@@ -605,7 +609,7 @@ def DenunciarPublicacion(request):
         if (comentario == ''):
             print("Tendriamos que tirar mensaje")        
         else:
-            denuncia = Denuncia(publicacion= publicacion, comentario= comentario, usuario= usuario, fecha_alta= fecha_alta)
+            denuncia = Denuncia(usuarioDenunciado= usuarioDenunciado, publicacion= publicacion, comentario= comentario, usuario= usuario, fecha_alta= fecha_alta)
             denuncia.save()
 
     return render(request, 'home/tema_detail.html', {'object': publicacion})
@@ -989,6 +993,17 @@ def VerMisForos(request, pk):
 
     return render(request, 'index.html', {'noticias': noticias, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC})
   
+def ContenidoDenunciado (request):
+    lista_elemento_denunciado = Denuncia.objects.all()
+
+    lista_carreras = Carrera.objects.all() 
+    materiasC =[]
+    for l in lista_carreras: 
+        materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
+
+    return render(request,'cuenta/contenido_denunciado.html', {'lista_cantMaterias':materiasC, 'lista_elemento_denunciado': lista_elemento_denunciado})
+
+    return
 
 """ APIS.""" 
 

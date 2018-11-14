@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+
+  {% load static %} 
+  {% block imagen_presentacion %}
+  {% endblock %}
+
+  {% block sidebar %}
+    <div class="sidebar-wrapper">
+        <aside class="widget widget_categories">
+          <h2 class="widget-title">Foro Carreras</h2>  
+            <ul>
+              {% for carrera,materia in lista_cantMaterias %}
+                  <li><a href="{% url 'foro_carrera' carrera.id %}"><i class="fa fa-angle-right"></i> {{ carrera }} <span class="badge"> {{ materia }}</span></a></li>
+              {% endfor %}      
+            </ul>
+        </aside>
+
+    </div>
+  {% endblock sidebar %} 
+
+
+  {% block content %}
+    <div id="id_invitaciones">
+      {% for denuncia in lista_elemento_denunciado %}
+          <div class="cta-v2">
+            <div>
+              <h2> Se a denunciado al usuario {{denuncia.usuarioDenunciado.usuario.username}}</h2>
+              <p> Acceda al link que se encuentra abajo para acceder a la publicacion </p>
+              <p></p>
+            </div>
+              <footer class="entry-footer clearfix">
+                <div id="divIdBrra">
+                  <ul class="entry-meta pull-right">
+                      <li><a onclick="agregar_miembro({{invitacion.group.id}})" class="flaticon-check64"><span class="like"> &nbsp; Aceptar Invitacion</span></a></li>
+                      <li><span class="share"><a onclick="cancelar_invitacion({{invitacion.group.id}})" class="flaticon-cancel22"> &nbsp; Rechazar Invitacion </a></span></li>
+                      <li><span class="post-comments"><a data-toggle="modal" data-target="#ModalConfirmarDenuncia"><i class="fa fa-delete"></i> Denunciar</a></span></li>
+                  </ul>
+                </div>
+              </footer>
+          </div><!-- /.cta-v2 -->
+          <p></p>
+          <!-- /.modal -->
+            <div class="modal fade" id="ModalConfirmarDenuncia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title" id="exampleModalLabel">Está seguro que desea denunciar el grupo?</h3>
+                  </div>
+                  <div class="modal-body">
+                      <textarea name="comentarioDenuncia" class="form-control" id="id_comentarioDenuncia" placeholder="Ingrese el motivo por el cual esta denunciando esta noticia" type="text" rows="4"></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="action" class="btn btn-success" data-dismiss="modal" onclick="denuncia_grupo({{invitacion.group.id}})">Denunciar Grupo</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <!-- /.modal -->
+        {% endfor %}
+        {% if lista_invitacion.count == 0 %}
+        <p> No tenes invitaciones, nadie te  quiere.</p>
+        {% endif%}
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+     <script>
+        function agregar_miembro(idG){
+            $.ajax({
+              type: 'POST',
+              url: '/home/foroGrupo/invitacion/',
+              data: {idGroup: idG, idAction: 1},
+              success: function (data) {
+                $("#id_invitaciones").load(" #id_invitaciones")
+              },
+              error: function(data) {
+              }
+            });
+          };
+    </script>
+    <script>
+        function cancelar_invitacion(idG){
+            $.ajax({
+              type: 'POST',
+              url: '/home/foroGrupo/invitacion/',
+              data: {idGroup: idG, idAction: 2},
+              success: function (data) {
+                $("#id_invitaciones").load(" #id_invitaciones")
+              },
+              error: function(data) {
+              }
+            });
+          };
+    </script>
+    <script>
+      function denuncia_grupo(idG){
+        var comentarioDenuncia = $("#id_comentarioDenuncia").val()
+        $.ajax({
+          type: 'POST',
+          url: '/home/foroGrupo/denunciar/',
+          data: {idGroup: idG, comentario: comentarioDenuncia},
+          success: function (data) {
+            $("#id_invitaciones").load(" #id_invitaciones")
+          },
+          error: function(data) {
+          }
+        });
+      }
+    </script>
+
+
+  {% endblock %}
