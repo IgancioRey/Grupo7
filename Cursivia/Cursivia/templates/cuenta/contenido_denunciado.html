@@ -22,19 +22,22 @@
 
   {% block content %}
     <div id="id_invitaciones">
-      {% for denuncia in lista_elemento_denunciado %}
+      {% for publicacion in lista_publicaciones_denunciadas %}
           <div class="cta-v2">
             <div>
-              <h2> Se a denunciado al usuario {{denuncia.usuarioDenunciado.usuario.username}}</h2>
-              <p> Acceda al link que se encuentra abajo para acceder a la publicacion </p>
+              <h2> Se a denunciado la publicacion del usuario {{publicacion.usuario.username}}</h2>
+              <p> Acceda al link que se encuentra abajo para visualizar el contenido denunciado </p>
               <p></p>
             </div>
               <footer class="entry-footer clearfix">
                 <div id="divIdBrra">
                   <ul class="entry-meta pull-right">
-                      <li><a onclick="agregar_miembro({{invitacion.group.id}})" class="flaticon-check64"><span class="like"> &nbsp; Aceptar Invitacion</span></a></li>
-                      <li><span class="share"><a onclick="cancelar_invitacion({{invitacion.group.id}})" class="flaticon-cancel22"> &nbsp; Rechazar Invitacion </a></span></li>
-                      <li><span class="post-comments"><a data-toggle="modal" data-target="#ModalConfirmarDenuncia"><i class="fa fa-delete"></i> Denunciar</a></span></li>
+                      <li><a onclick="agregar_miembro({{invitacion.group.id}})" class="flaticon-check64"><span class="like"> &nbsp; Aceptar Denuncua</span></a></li>
+                      <li><span class="share"><a onclick="cancelar_invitacion({{invitacion.group.id}})" class="flaticon-cancel22"> &nbsp; Rechazar Denuncua </a></span></li>
+                      
+
+
+                      <li><span class="post-comments"><a href="{{publicacion.get_absolute_url}}" "><i class="fa fa-delete"></i> Contenido denunciado</a></span></li>
                   </ul>
                 </div>
               </footer>

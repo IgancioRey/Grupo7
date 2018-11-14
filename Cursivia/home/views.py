@@ -994,14 +994,14 @@ def VerMisForos(request, pk):
     return render(request, 'index.html', {'noticias': noticias, 'lista_carreras': lista_carreras, 'lista_cantMaterias': materiasC})
   
 def ContenidoDenunciado (request):
-    lista_elemento_denunciado = Denuncia.objects.all()
-
+    lista_publicaciones_denunciadas = Publicacion.objects.all().filter(estado_publicacion__exact='d')
+    print (lista_publicaciones_denunciadas)
     lista_carreras = Carrera.objects.all() 
     materiasC =[]
     for l in lista_carreras: 
         materiasC.append([l,Materia.objects.all().filter(carrera=l).count()])
 
-    return render(request,'cuenta/contenido_denunciado.html', {'lista_cantMaterias':materiasC, 'lista_elemento_denunciado': lista_elemento_denunciado})
+    return render(request,'cuenta/contenido_denunciado.html', {'lista_cantMaterias':materiasC, 'lista_publicaciones_denunciadas': lista_publicaciones_denunciadas})
 
     return
 

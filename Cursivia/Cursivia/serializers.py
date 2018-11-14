@@ -63,7 +63,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class ComentariosSerializer(serializers.HyperlinkedModelSerializer): 
     class Meta:
         model = Comentario
-        fields = ('comentario','publicacion', 'usuario')
+        fields = ('comentario','publicacion', 'usuario', 'estado_comentario')
 
 class meGustaSerializer(serializers.HyperlinkedModelSerializer): 
     class Meta:
