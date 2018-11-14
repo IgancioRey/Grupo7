@@ -31,6 +31,9 @@ router.register('usuarios', views.UsuariosViewSet)
 router.register('comentarios', views.ComentariosViewSet)
 router.register('user', views.UserViewSet)
 router.register('meGusta', views.MeGustaViewSet)
+router.register('Token', views.TokenViewSet)
+
+
 
 
 

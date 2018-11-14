@@ -22,7 +22,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from Cursivia.serializers import meGustaSerializer, UserSerializer, NoticiaSerializer, CarrerasSerializer, MateriasSerializer, UsuariosSerializer, ComentariosSerializer
+from Cursivia.serializers import tokenSerializer, meGustaSerializer, UserSerializer, NoticiaSerializer, CarrerasSerializer, MateriasSerializer, UsuariosSerializer, ComentariosSerializer
 
 from django.conf import settings
 from django.db.models.signals import post_save
@@ -947,6 +947,12 @@ class MeGustaViewSet(viewsets.ModelViewSet):
     queryset = MeGusta.objects.all()
     serializer_class = meGustaSerializer
     filter_backends = (OrderingFilter, DjangoFilterBackend)
+
+class TokenViewSet(viewsets.ModelViewSet):
+    queryset = Token.objects.all()
+    serializer_class = tokenSerializer
+
+    
 
 @receiver(post_save, sender=get_user_model())
 def create_auth_token(sender, instance=None, created=False, **kwargs):

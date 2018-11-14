@@ -1,6 +1,6 @@
 from rest_framework import serializers 
+from rest_framework.authtoken.models import Token
 from home.models import Publicacion, Carrera, Materia, Usuario, Comentario, User, MeGusta
-from django.contrib.auth.models import User
 
 
 class UsuarioSerializer(serializers.Serializer):
@@ -70,4 +70,8 @@ class meGustaSerializer(serializers.HyperlinkedModelSerializer):
         model = MeGusta
         fields = ('id','publicacion', 'usuario')
 
+class tokenSerializer(serializers.HyperlinkedModelSerializer): 
+    class Meta:
+        model = Token
+        fields = '__all__'
 
